@@ -1,0 +1,245 @@
+.phone {
+  width: 300px;
+  background: #f5f5f5f5;
+  margin:0 auto;
+  border-radius: 40px 40px;
+  box-shadow: 0px 5px 16px 0px #000000c2;
+  padding: 40px 15px 20px 15px;
+  box-sizing: border-box;
+  text-align: center;
+  position:relative;
+}
+
+.front_speaker{
+  width: 40px;
+  height: 4px;
+  background: rgb(105, 105, 105);
+  border-radius: 2px;
+  margin: 0 auto 30px;
+  position:relative;
+}
+
+.front_speaker:before,
+.front_speaker:after{
+  content:"";
+  display: block;
+  position:absolute;
+  background: rgb(105, 105, 105);
+  border-radius:50%;
+}
+
+.front_speaker:before{
+  width: 10px;
+  height: 10px;
+  left: -25px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.front_speaker:after{
+  width: 5px;
+  height: 5px;
+  left: 50%;
+  top: -20px;
+  transform: translateX(-50%);
+}
+
+.screen{
+  background: black;
+  height: 440px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  /* background-image: url(https://im.bloha.ru/bh/2s.jpg); */
+  background-size: cover;
+  background-position: top;
+  position: relative;
+}
+
+.screen > *{
+  flex:1;
+}
+
+.showBackgroundImg{
+  background-image: url(https://im.bloha.ru/bh/2s.jpg);
+}
+
+.home_button{
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1px solid rgb(105, 105, 105);
+  box-shadow: inset 0px 0px 4px 0px rgb(0 0 0 / 57%);
+  cursor:pointer;
+  outline:none;
+}
+
+.volume_controls{
+  width: 10px;
+  height: 60px;
+  position: absolute;
+  top: 75px;
+  right: 100%;
+  overflow: hidden;
+  padding-left: 10px;
+  box-sizing: border-box;
+}
+
+.turn_up_volume,
+.turn_down_volume{
+  background:black;
+  width:10px;
+  height:30px;
+  border:0;
+  outline:none;
+  padding:0;
+  cursor:pointer;
+  display: block;
+  transition: all 300ms linear;
+}
+
+.turn_up_volume{
+  transform: rotateZ(-20deg);
+  transform-origin: left bottom;
+}
+.turn_down_volume{
+  transform: rotateZ(20deg);
+  transform-origin: right top;
+}
+
+.blocked_screen {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 50px 0;
+}
+
+.time_container{
+  margin: 0;
+  color: #fffcfc;
+  text-shadow: 0 0 4px #d7cfcf;
+  font-family: monospace;
+}
+
+.time_container .time{
+  font-size: 70px;
+  margin: 0;
+}
+
+.time_container .date{
+  font-size: 20px;
+  margin: 0;
+}
+
+.unblocked_container{
+  width: 80%;
+  margin: 0 auto;
+ /* background: red;  */
+  height: 50px;
+}
+
+.offScreen {
+}
+
+.home_screen{
+  padding: 10px;
+/*   display: grid; */
+  display: none;
+  grid-template-columns: repeat(4, 60px);
+  grid-auto-rows: 55px;
+  grid-column-gap: 3px;
+  grid-row-gap: 3px;
+  align-items: center;
+}
+
+.home_screen > div{
+  width:40px;
+  height:40px;
+  background:white;
+  border-radius: 50%;
+  margin: 0 auto;
+}
+
+.preloader {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  background: black;
+  z-index: 1001;
+}
+
+.preloader__image {
+  position: relative;
+  top: 50%;
+  width: 70px;
+  height: 70px;
+  margin-top: -35px;
+  text-align: center;
+  animation: preloader-rotate 2s infinite linear;
+}
+
+@keyframes preloader-rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 50px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.4;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+  border-radius: 25px;
+  padding: 2px 5px 2px;
+  position: relative;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 0;
+  background: white;
+  cursor: pointer;
+}
+
+.slider::before {
+  content: 'Slide to Unlock';
+  position: absolute;
+  color: white;
+  top: 17px;
+  left: 61px;
+  font-size: 20px;
+}
+
+.cameraBtn {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+.cameraApp {
+  display: none;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 50px 0;
+}
+

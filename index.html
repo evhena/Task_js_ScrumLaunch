@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - pet project for trainee</title>
+  <link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div class="phone">
+  <div class="volume_controls">
+    <button class="turn_up_volume"></button>
+    <button class="turn_down_volume"></button>
+  </div>
+  <div class="front_speaker"></div>
+  <div class="screen">
+    <!-- Прелоадер -->
+    <div class="preloader">
+      <svg class="preloader__image" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <path fill="white"
+          d="M304 48c0 26.51-21.49 48-48 48s-48-21.49-48-48 21.49-48 48-48 48 21.49 48 48zm-48 368c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48zm208-208c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48zM96 256c0-26.51-21.49-48-48-48S0 229.49 0 256s21.49 48 48 48 48-21.49 48-48zm12.922 99.078c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48c0-26.509-21.491-48-48-48zm294.156 0c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48c0-26.509-21.49-48-48-48zM108.922 60.922c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.491-48-48-48z">
+        </path>
+      </svg>
+    </div>
+    <div class="blocked_screen">
+      <div class="time_container">
+        <p class="time">
+          12:00
+        </p>
+        <p class="date">
+          Thursday, April 15
+        </p>
+      </div>
+      
+      <div class="unblocked_container">
+        <input type="range" min="1" max="100" value="0" class="slider" id="unblockPhone">
+      </div>
+    </div>
+    <div class="home_screen">
+      <div>
+        <button class="cameraBtn">CAM</button>
+        <div class="cameraApp">
+          <video id="video" width="640" height="480" autoplay></video>
+          <button id="snap">Сделать снимок</button>
+          <canvas id="canvas" width="640" height="480"></canvas>
+        </div>
+        
+      </div>
+      <div>
+        <input type="file" name="image" accept="image/*" capture="user">
+      </div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+  <button class="home_button"></button>
+</div>
+<!--
+<svg class="spinner" viewBox="0 0 50 50">
+  <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+</svg>-->
+<!-- partial -->
+  <script  src="./script.js"></script>
+
+</body>
+</html>
