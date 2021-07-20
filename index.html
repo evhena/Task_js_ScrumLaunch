@@ -15,7 +15,7 @@
   </div>
   <div class="front_speaker"></div>
   <div class="screen">
-    <!-- Прелоадер -->
+    
     <div class="preloader">
       <svg class="preloader__image" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
         <path fill="white"
@@ -23,6 +23,7 @@
         </path>
       </svg>
     </div>
+
     <div class="blocked_screen">
       <div class="time_container">
         <p class="time">
@@ -32,29 +33,42 @@
           Thursday, April 15
         </p>
       </div>
-      
       <div class="unblocked_container">
         <input type="range" min="1" max="100" value="0" class="slider" id="unblockPhone">
       </div>
     </div>
+
     <div class="home_screen">
-      <div>
-        <button class="cameraBtn">CAM</button>
-        <div class="cameraApp">
-          <video id="video" width="640" height="480" autoplay></video>
-          <button id="snap">Сделать снимок</button>
-          <canvas id="canvas" width="640" height="480"></canvas>
+      <button class="camera_app">CAM</button>
+      <button class="audio_app">CAM</button>
+      <button class="todo_app">CAM</button>
+    </div>
+
+    <div class="camera_app_container">
+      <span class="close_button">&times;</span>
+      <video id="video" class="video" width="267" height="90%" autoplay></video>
+      <div class="camera_app_menu">
+        <canvas id="canvas" class="photo" width="640" height="480"></canvas>
+        <div class="snap_button_container">
+          <button id="snap" class="snap_button"></button>
         </div>
         
       </div>
-      <div>
-        <input type="file" name="image" accept="image/*" capture="user">
-      </div>
-      <div></div>
-      <div></div>
-      <div></div>
+      
     </div>
+
+    <div class="audio_app_container">
+
+    </div>
+
+    <div class="todo_app_container">
+
+    </div>
+    
   </div>
+
+  
+
   <button class="home_button"></button>
 </div>
 <!--

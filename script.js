@@ -113,11 +113,20 @@ unblockPhone.addEventListener("change", function(evt) {
 // должны быть минимум три приложение
 // во всех приложениях должна быть возможность закрыть его
 
-const cameraBtn = document.querySelector('.cameraBtn');
-const cameraApp = document.querySelector('.cameraApp');
+const cameraApp = document.querySelector('.camera_app');
+const cameraAppContainer = document.querySelector('.camera_app_container');
+const closAppButton = document.querySelector('.close_button');
 
-cameraBtn.addEventListener('click', function() {
-    cameraApp.style.display = 'flex';
+cameraApp.addEventListener('click', function() {
+    console.log('turn on camera');
+    homeScreen.style.display = 'none';
+    cameraAppContainer.style.display = 'flex';
+    cameraBtn.style.display = 'none';  
+})
+
+closAppButton.addEventListener('click', () => {
+    cameraAppContainer.style.display = 'none';
+    homeScreen.style.display = 'grid';
 })
 // 3.1 камера :
 // при запуске этого приложеня на экране телефона должно вывестись изображение с камеры ноутбука или другого девайса
@@ -131,6 +140,17 @@ if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         video.play();
     });
 }
+
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+var video = document.getElementById('video');
+
+// Обработчик события нажатия на кнопку "Сделать снимок"
+document.getElementById("snap").addEventListener("click", function() {
+	context.drawImage(video, 0, 0, 640, 480);
+});
+
+
 // 3.2 музыка :
 // на эране должно появится мултимедия с возможностю запустить/остановить музыку и прогрес музыки
 // звук должен выводится на девайс (громкость зависит от растояния курсора от динамика в верху телефона)

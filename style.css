@@ -153,12 +153,13 @@
   align-items: center;
 }
 
-.home_screen > div{
+.home_screen > button{
   width:40px;
   height:40px;
   background:white;
   border-radius: 50%;
   margin: 0 auto;
+  box-shadow: inset 0px 0px 10px rgba(0,0,0,0.5);
 }
 
 .preloader {
@@ -226,20 +227,74 @@
   font-size: 20px;
 }
 
-.cameraBtn {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  border: 0;
-  padding: 0;
-  margin: 0;
+.camera_app,
+.audio_app,
+.todo_app {
+  
 }
-.cameraApp {
+
+.camera_app_container,
+.audio_app_container,
+.todo_app_container {
   display: none;
   width: 100%;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 50px 0;
+  padding: 2px 0;
+  background-color: black;
+  
 }
+
+.camera_app_menu {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.close_button {
+  width: 100%;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 26px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+  padding-right: 10px;
+  text-align: right;
+}
+
+.close_button:hover {
+  color: gray;
+}
+
+.video {
+  border: 1px solid black;
+}
+
+.photo {
+  width: 80px;
+  border: 5px solid black;
+}
+
+.snap_button_container {
+  width: 70%;
+  padding-left: 20px;
+  text-align: left;
+}
+
+.snap_button {
+  height: 50px;
+  width: 50px;
+  border: 1px solid gray;
+  border-radius: 50%;
+  margin-bottom: 3px;
+  box-shadow: inset 0px 0px 10px rgb(0 0 0 / 66%);
+}
+
+.photo {
+
+}  
 
