@@ -113,39 +113,44 @@ unblockPhone.addEventListener("change", function(evt) {
 // должны быть минимум три приложение
 // во всех приложениях должна быть возможность закрыть его
 
-const cameraApp = document.querySelector('.camera_app');
-const cameraAppContainer = document.querySelector('.camera_app_container');
-const closAppButton = document.querySelector('.close_button');
 
-cameraApp.addEventListener('click', function() {
-    console.log('turn on camera');
-    homeScreen.style.display = 'none';
-    cameraAppContainer.style.display = 'flex';
-    cameraBtn.style.display = 'none';  
-})
-
-closAppButton.addEventListener('click', () => {
+const closAppButton = Array.from(document.querySelectorAll('.close_button'));
+/*
+closAppButton.forEach(closAppButton[].addEventListener('click', () => {
     cameraAppContainer.style.display = 'none';
+    musicAppContainer.style.display = 'none';
     homeScreen.style.display = 'grid';
 })
+)
+*/
+    
 // 3.1 камера :
 // при запуске этого приложеня на экране телефона должно вывестись изображение с камеры ноутбука или другого девайса
+
+const cameraApp = document.querySelector('.camera_app');
+const cameraAppContainer = document.querySelector('.camera_app_container');
+
+cameraApp.addEventListener('click', function() {
+    homeScreen.style.display = 'none';
+    cameraAppContainer.style.display = 'flex';  
+});
+
 var video = document.getElementById('video');
 
-// Получаем доступ к камере
 if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    // Не включаем аудио опцией `{ audio: true }` поскольку сейчас мы работаем только с изображениями
     navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
         video.srcObject = stream;
         video.play();
     });
-}
+};
 
 var canvas = document.getElementById('canvas');
 var context = canvas.getContext('2d');
 var video = document.getElementById('video');
 
-// Обработчик события нажатия на кнопку "Сделать снимок"
+context.translate(canvas.width, 0);
+context.scale(-1, 1);
+
 document.getElementById("snap").addEventListener("click", function() {
 	context.drawImage(video, 0, 0, 640, 480);
 });
@@ -154,8 +159,16 @@ document.getElementById("snap").addEventListener("click", function() {
 // 3.2 музыка :
 // на эране должно появится мултимедия с возможностю запустить/остановить музыку и прогрес музыки
 // звук должен выводится на девайс (громкость зависит от растояния курсора от динамика в верху телефона)
-
 // при нажатии на кнопки громкости должна происходить анимация нажатия и на экране должно появлятся шкала громкости
+
+const musicApp = document.querySelector('.music_app');
+const musicAppContainer = document.querySelector('.music_app_container');
+
+musicApp.addEventListener('click', function() {
+    homeScreen.style.display = 'none';
+    musicAppContainer.style.display = 'flex';  
+});
+
 
 // 3.3 туду лист
 //   авторизация

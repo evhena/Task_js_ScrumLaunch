@@ -234,7 +234,7 @@
 }
 
 .camera_app_container,
-.audio_app_container,
+.music_app_container,
 .todo_app_container {
   display: none;
   width: 100%;
@@ -272,6 +272,11 @@
 
 .video {
   border: 1px solid black;
+  transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  -ms-transform: scaleX(-1);
+  -moz-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
 }
 
 .photo {
@@ -294,7 +299,12 @@
   box-shadow: inset 0px 0px 10px rgb(0 0 0 / 66%);
 }
 
-.photo {
+.music_app_container {
+  background: linear-gradient(to bottom right, #b968c5, skyblue);
+}
 
-}  
+audio {
+  width: 100%;
+  padding-bottom: 50px;
+} 
 
