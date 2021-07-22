@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <title>CodePen - pet project for trainee</title>
   <link rel="stylesheet" href="./style.css">
-
+  <link rel="stylesheet" href="https://use.fontawesome.com/......">
+  <link rel="stylesheet" href="">
 </head>
 <body>
 <!-- partial:index.partial.html -->
@@ -57,11 +58,32 @@
 
     <div class="music_app_container">
       <span class="close_button">&times;</span>
-      <audio id="audio" src="./media/Red_Lamp_Slava_KPSS.mp3" controls></audio>
+      <div>
+
+      </div>
     </div>
 
     <div class="todo_app_container">
-
+      <h1>My TO-DO list</h1>
+      <input type="text" placeholder="add what to do">
+      <ul class="todos">
+        <li class="todos_item">
+          <span class="todos_text">pay bills</span>
+          <span class="todos_trash">
+            <i></i>
+          </span>
+        </li>
+        <li class="todos_item">
+          <span class="todos_text">buy pet's food</span>
+          <span class="todos_trash">
+            <i></i>
+          </span>
+        </li>
+      </ul>
+      <div id="buttons">
+        <button class="button_save_list">Save list</button>
+        <button class="button_clear_list">Clear list</button>
+      </div>
     </div>
     
   </div>

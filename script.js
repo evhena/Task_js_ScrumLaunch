@@ -176,7 +176,51 @@ musicApp.addEventListener('click', function() {
 //   список невыполненых задач (кнопка удаления, кнопка завершения)
 //   кнопка для вывода списка выполненых задач
   
+function onPageLoaded() {
+    const inputToDo = document.querySelector("intut[type='text]");
+    const toDos = document.querySelector(".todos");
+    const saveButton = document.querySelector(".button_save_list");
+    const clearButton = document.querySelector(".button_clear_list");
 
+    function createToDo() {
+        const toDoItem = document.createElement("li");
+        const toDoText = document.createElement("span");
+        toDoText.classList.add("todos_text");
+        const newToDo = input.value;
+        toDoText.append(newToDo);
+
+        const toDoTrash = document.createElement("span");
+        toDoTrash.classList.add("todos_trash");
+        const iconTrash = document.createElement("i");
+        iconTrash.classList.add("fas", "fa-trash-alt");
+        toDoTrash.appendChild(iconTrash);
+
+        toDos.appendChild(toDoItem).append(toDoText, toDoTrash);
+        inputToDo.value = "";
+
+        listenDeleteToDos(toDoTrash);
+    }
+
+    function listenDeleteToDos(el) {
+        el.addEventListener("click", (event) => {
+            el.parentElement.remove();
+            event.stopPropagation();
+        });
+    }
+
+    function onClickToDo(event) {
+        if (event.target.tagName === "LI") {
+            event.target.classList.toggle("checked");
+        }
+    }
+
+    inputToDo.addEventListener("click", onClickTodo);
+    saveButton.addEventListener("click", ()=> {
+        
+    })
+}
+
+document.addEventListener("DOMContentLoaded", onPageLoaded);
 
 // ********
 // сделать поисковик аля браузер с использыванием фрейма
