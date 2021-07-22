@@ -26,7 +26,6 @@ homeButton.addEventListener('click', function(evt) {
 
 function startScreen() {
     if (screenPhone.classList.contains('.offScreen')) {
-        console.log('phone is off');
         preloader.style.display = 'block';
         setTimeout(showBlockedScreen, 3000);
     }
@@ -113,16 +112,18 @@ unblockPhone.addEventListener("change", function(evt) {
 // должны быть минимум три приложение
 // во всех приложениях должна быть возможность закрыть его
 
+const closeAppButtons = Array.from(document.querySelectorAll('.close_button'));
 
-const closAppButton = Array.from(document.querySelectorAll('.close_button'));
-/*
-closAppButton.forEach(closAppButton[].addEventListener('click', () => {
-    cameraAppContainer.style.display = 'none';
-    musicAppContainer.style.display = 'none';
-    homeScreen.style.display = 'grid';
+closeAppButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        cameraAppContainer.style.display = 'none';
+        musicAppContainer.style.display = 'none';
+        todoAppContainer.style.display = 'none';
+        homeScreen.style.display = 'grid';
+    });
 })
-)
-*/
+
+
     
 // 3.1 камера :
 // при запуске этого приложеня на экране телефона должно вывестись изображение с камеры ноутбука или другого девайса
@@ -175,49 +176,87 @@ musicApp.addEventListener('click', function() {
 //   поле создания задачи
 //   список невыполненых задач (кнопка удаления, кнопка завершения)
 //   кнопка для вывода списка выполненых задач
-  
+
+const todoApp = document.querySelector('.todo_app');
+const todoAppContainer = document.querySelector('.todo_app_container');
+
+todoApp.addEventListener('click', () => {
+    homeScreen.style.display = 'none';
+    todoAppContainer.style.display = 'flex';
+    onPageLoaded();
+})
+
 function onPageLoaded() {
-    const inputToDo = document.querySelector("intut[type='text]");
-    const toDos = document.querySelector(".todos");
-    const saveButton = document.querySelector(".button_save_list");
-    const clearButton = document.querySelector(".button_clear_list");
+    const inputTodo = document.querySelector(".todo_input");
+    const todoList = document.querySelector(".todo_list");
+    const saveListButton = document.querySelector(".button_save_list");
+    const clearListButton = document.querySelector(".button_clear_list");
 
-    function createToDo() {
-        const toDoItem = document.createElement("li");
-        const toDoText = document.createElement("span");
-        toDoText.classList.add("todos_text");
-        const newToDo = input.value;
-        toDoText.append(newToDo);
-
-        const toDoTrash = document.createElement("span");
-        toDoTrash.classList.add("todos_trash");
+    function createTodo() {
+        const todoItem = document.createElement("li");
+        todoItem.classList.add("todo_item");
+        todoList.append(todoItem)
+        const todoText = document.createElement("span");
+        todoText.classList.add("todos_text");
         const iconTrash = document.createElement("i");
         iconTrash.classList.add("fas", "fa-trash-alt");
-        toDoTrash.appendChild(iconTrash);
-
-        toDos.appendChild(toDoItem).append(toDoText, toDoTrash);
-        inputToDo.value = "";
-
-        listenDeleteToDos(toDoTrash);
+        todoItem.append(todoText, iconTrash);
+        
+        const newTodo = inputTodo.value;
+        todoText.append(newTodo);
+        
+        inputTodo.value = "";
+        deleteTodos(iconTrash);
+       
     }
 
-    function listenDeleteToDos(el) {
+    inputTodo.addEventListener('keypress', (keyPressed) => {
+        const keyEnter = 13;
+        if (keyPressed.which == keyEnter) {
+            createTodo();   
+        }
+    });
+/*
+    inputTodo.addEventListener('dblclick', () => {
+            createTodo();
+    });
+*/
+    function deleteTodos(el) {
         el.addEventListener("click", (event) => {
             el.parentElement.remove();
             event.stopPropagation();
         });
     }
 
-    function onClickToDo(event) {
+    function checkDone(event) {
         if (event.target.tagName === "LI") {
             event.target.classList.toggle("checked");
         }
     }
 
-    inputToDo.addEventListener("click", onClickTodo);
-    saveButton.addEventListener("click", ()=> {
-        
-    })
+    //todoItem.addEventListener("click", checkDone);
+
+    saveListButton.addEventListener("click", ()=> {
+        localStorage.setItem("todoList", todoList.innerHTML);
+    });
+
+    clearListButton.addEventListener("click", ()=> {
+        todoList.innerHTML = "";
+        localStorage.removeItem("todoList", todoList.innerHTML);
+    });
+
+    function loadTodos() {
+        const data = localStorage.getItem("todoItem");
+        if (data) {
+            todoList.innerHTML = data;
+        }
+        const deleteButtons = document.querySelectorAll('todos_trash');
+        for (const button of deleteButtons) {
+            listenDeleteTodos(button);
+        }
+    }
+
+    loadTodos();
 }
 
 document.addEventListener("DOMContentLoaded", onPageLoaded);

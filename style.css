@@ -308,3 +308,7 @@ audio {
   padding-bottom: 50px;
 } 
 
+.todo_app_container {
+  display: none;
+  background-color:rgb(105, 105, 105)
+}
