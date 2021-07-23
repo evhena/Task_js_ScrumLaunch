@@ -306,9 +306,92 @@
 audio {
   width: 100%;
   padding-bottom: 50px;
-} 
+}
+
+/*TODO*/
 
 .todo_app_container {
   display: none;
-  background-color:rgb(105, 105, 105)
+  background:cadetblue;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
+
+.todo_list_name {
+  height: 10%;
+  width: 100%;
+  color: #000;
+  margin-bottom: 10px;
+}
+
+.todo_input {
+  width: 95%;
+  height: 8%;
+  border: none;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.todo_list {
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.todo_list_item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 96%;
+  list-style: none;
+  height: 30px;
+  border-radius: 5px;
+  background-color: #fffcfc;
+  color: #000;
+  font-size: 18px;
+  font-weight: 400;
+  font-family: 'Bad Script';
+  padding-bottom: 5px;
+  margin: 0 0 2px;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+input[type=checkbox] {
+  margin-right: 10px;
+}
+
+.todo_buttons {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  align-items: flex-end;
+  height: 15%;
+  padding-bottom: 10px;
+}
+
+.button_save_list,
+.button_clear_list,
+.button_list_done {
+  border: none;
+  background-color: darkcyan;
+  border-radius: 5px;
+  color: #fff;
+  height: 30px;
+}
+
+.button_save_list:hover,
+.button_clear_list:hover,
+.button_list_done:hover {
+  background-color: #fff;
+  color: darkcyan;
+}
+
+

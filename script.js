@@ -27,7 +27,7 @@ homeButton.addEventListener('click', function(evt) {
 function startScreen() {
     if (screenPhone.classList.contains('.offScreen')) {
         preloader.style.display = 'block';
-        setTimeout(showBlockedScreen, 3000);
+        setTimeout(showBlockedScreen, 0);  //3000
     }
 }
 
@@ -188,39 +188,69 @@ todoApp.addEventListener('click', () => {
 
 function onPageLoaded() {
     const inputTodo = document.querySelector(".todo_input");
-    const todoList = document.querySelector(".todo_list");
+    const todoList = document.querySelector("ul.todo_list");
     const saveListButton = document.querySelector(".button_save_list");
     const clearListButton = document.querySelector(".button_clear_list");
 
     function createTodo() {
         const todoItem = document.createElement("li");
-        todoItem.classList.add("todo_item");
-        todoList.append(todoItem)
+        todoItem.classList.add("todo_list_item");
+        todoList.appendChild(todoItem);
+
+        const todoLabel = document.createElement("label");
+        const checkBox = document.createElement("input");
+        checkBox.type = "checkbox";
+
         const todoText = document.createElement("span");
-        todoText.classList.add("todos_text");
+        todoText.innerHTML = inputTodo.value;
+        todoText.classList.add("todo_text");
+
+        
         const iconTrash = document.createElement("i");
         iconTrash.classList.add("fas", "fa-trash-alt");
-        todoItem.append(todoText, iconTrash);
         
-        const newTodo = inputTodo.value;
-        todoText.append(newTodo);
-        
+        todoLabel.appendChild(checkBox);
+        todoLabel.appendChild(todoText);
+        todoItem.appendChild(todoLabel);
+        todoItem.appendChild(iconTrash);
+
         inputTodo.value = "";
-        deleteTodos(iconTrash);
-       
+        deleteTodos(iconTrash);  
     }
 
-    inputTodo.addEventListener('keypress', (keyPressed) => {
+/*
+    function createTodo() {
+        const li = document.createElement("li");
+        const textSpan = document.createElement("span");
+        textSpan.classList.add("todo-text");
+        const newTodo = input.value;
+        textSpan.append(newTodo);
+
+        const deleteBtn = document.createElement("span");
+        deleteBtn.classList.add("todo-trash");
+        const icon = document.createElement("i");
+        icon.classList.add("fas", "fa-trash-alt");
+        deleteBtn.appendChild(icon);
+
+        ul.appendChild(li).append(textSpan, deleteBtn);
+        input.value = "";
+        listenDeleteTodo(deleteBtn);
+    }
+*/
+    inputTodo.addEventListener("keypress", (keyPressed) => {
         const keyEnter = 13;
         if (keyPressed.which == keyEnter) {
-            createTodo();   
+            createTodo();
         }
     });
-/*
+
+    todoList.addEventListener("click", onClickTodo);
+
     inputTodo.addEventListener('dblclick', () => {
+            console.log('create todo dblClick');
             createTodo();
     });
-*/
+
     function deleteTodos(el) {
         el.addEventListener("click", (event) => {
             el.parentElement.remove();
@@ -234,7 +264,7 @@ function onPageLoaded() {
         }
     }
 
-    //todoItem.addEventListener("click", checkDone);
+    todoLabel.addEventListener("click", checkDone);
 
     saveListButton.addEventListener("click", ()=> {
         localStorage.setItem("todoList", todoList.innerHTML);

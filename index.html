@@ -6,8 +6,6 @@
   <link rel="stylesheet" href="./style.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bad+Script">
-  <link rel="shortcut icon" href="assets/favicon.ico">
-  <link rel="icon" type="image/gif" href="assets/animated_favicon.gif">
 </head>
 <body>
 <!-- partial:index.partial.html -->
@@ -60,24 +58,56 @@
 
     <div class="music_app_container">
       <span class="close_button">&times;</span>
-      <div>
+      <div class="audio-player">
+        <div class="timeline">
+          <div class="progress"></div>
+        </div>
+        
+        <div class="controls">
 
+          <div class="play-container">
+            <div class="toggle-play play">
+            </div>
+          </div>
+
+          <div class="time">
+            <div class="current">0:00</div>
+            <div class="divider">/</div>
+            <div class="length"></div>
+          </div>
+
+          <div class="name">Music Song</div>
+
+          <div class="volume-container">
+            <div class="volume-button">
+              <div class="volume icono-volumeMedium"></div>
+            </div>
+            <div class="volume-slider">
+              <div class="volume-percentage"></div>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
 
     <div class="todo_app_container">
       <span class="close_button">&times;</span>
-      <h1>My TO-DO list</h1>
-      <input type="text" class="todo_input" placeholder="add what to do">
+      <h1 class="todo_list_name">My TO-DO list</h1>
+      <input type="text" class="todo_input" placeholder="Write smth">
       <ul class="todo_list">
         <li class="todo_list_item">
-          <span class="todos_text">pay bills</span>
+          <label>
+            <input type="checkbox" name="" id="">
+            <span class="todo_text">pay bills</span>
+          </label>
           <i class="fas fa-trash-alt"></i>
         </li>
       </ul>
-      <div id="buttons">
+      <div id="buttons" class="todo_buttons">
         <button class="button_save_list">Save list</button>
         <button class="button_clear_list">Clear list</button>
+        <button class="button_list_done">What we've done</button>
       </div>
     </div>
     
