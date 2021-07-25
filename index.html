@@ -94,25 +94,28 @@
     <div class="todo_app_container">
       <span class="close_button">&times;</span>
       <h1 class="todo_list_name">My TO-DO list</h1>
-      <input type="text" class="todo_input" placeholder="Write smth">
+      
+      <label class="todo_input_wrapper">
+        <input type="text" class="todo_input" placeholder="Write it down for don't forget">
+        <button type="submit" class="todo_add"><i class="fas fa-plus"></i></button>
+      </label>
       <ul class="todo_list">
-        <li class="todo_list_item">
-          <label>
-            <input type="checkbox" name="" id="">
-            <span class="todo_text">pay bills</span>
-          </label>
-          <i class="fas fa-trash-alt"></i>
-        </li>
       </ul>
+
       <div id="buttons" class="todo_buttons">
         <button class="button_save_list">Save list</button>
         <button class="button_clear_list">Clear list</button>
         <button class="button_list_done">What we've done</button>
       </div>
     </div>
-    
+
+    <div class="list_done">
+      <span class="back_button"><i class="fas fa-sign-out-alt">Back to ToDo</i> </span>
+    </div>
+   
   </div>
 
+  
   
 
   <button class="home_button"></button>

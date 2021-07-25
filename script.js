@@ -179,11 +179,11 @@ musicApp.addEventListener('click', function() {
 
 const todoApp = document.querySelector('.todo_app');
 const todoAppContainer = document.querySelector('.todo_app_container');
+const listDone = document.querySelector(".list_done");
 
 todoApp.addEventListener('click', () => {
     homeScreen.style.display = 'none';
     todoAppContainer.style.display = 'flex';
-    onPageLoaded();
 })
 
 function onPageLoaded() {
@@ -191,61 +191,97 @@ function onPageLoaded() {
     const todoList = document.querySelector("ul.todo_list");
     const saveListButton = document.querySelector(".button_save_list");
     const clearListButton = document.querySelector(".button_clear_list");
+    const showListDone = document.querySelector(".button_list_done");
 
     function createTodo() {
-        const todoItem = document.createElement("li");
+        const todoItem = document.createElement("LI");
         todoItem.classList.add("todo_list_item");
-        todoList.appendChild(todoItem);
-
-        const todoLabel = document.createElement("label");
-        const checkBox = document.createElement("input");
+        
+        const todoLabel = document.createElement("LABEL");
+        todoLabel.classList.add("todo_text_wrapper");
+        
+        const checkBox = document.createElement("INPUT");
         checkBox.type = "checkbox";
-
-        const todoText = document.createElement("span");
-        todoText.innerHTML = inputTodo.value;
+        
+        const todoText = document.createElement("SPAN");
         todoText.classList.add("todo_text");
-
         
-        const iconTrash = document.createElement("i");
-        iconTrash.classList.add("fas", "fa-trash-alt");
+        let newTodo = inputTodo.value;
         
-        todoLabel.appendChild(checkBox);
-        todoLabel.appendChild(todoText);
-        todoItem.appendChild(todoLabel);
-        todoItem.appendChild(iconTrash);
+        if (newTodo) {
+            todoText.innerHTML = newTodo;
+            todoList.appendChild(todoItem);
+            todoLabel.appendChild(checkBox);
+            todoLabel.appendChild(todoText);
+            todoItem.appendChild(todoLabel);
+        }
 
         inputTodo.value = "";
-        deleteTodos(iconTrash);  
+
+        const iconTrash = document.createElement("I");
+        iconTrash.classList.add("far", "fa-trash-alt");
+        todoItem.appendChild(iconTrash);
+        deleteTodos(iconTrash);
+        
+    /*    const chackedItems = [];
+        if (this.parentElement.classList.contains("checked")) {
+            
+        }
+      
+        chackedItems.forEach(el => {
+            el.addEventListener('change', () => {
+                if (this.checked) {
+                    console.log(this.checked);
+                    this.parentElement.classList.add("checked");
+                    console.log("Checkbox is checked..");
+                    let array = [];
+                    array.push(this.parentElement);
+                    console.log(array);
+                    localStorage.setItem("listWhatAlredyDone", this.parentElement.innerHTML);
+
+                    let temporaryWrapper = document.createElement('p');
+                    temporaryWrapper.innerHTML = localStorage.getItem("listWhatAlredyDone");
+                    let temporaryElement = temporaryWrapper.innerHTML;
+                    console.log(temporaryElement);
+                    let arr = [];
+                    arr.push(temporaryElement);
+                    console.log(arr);
+                } else {
+                    console.log("Checkbox is not checked..");
+                    this.parentElement.classList.remove("checked");
+                }
+            });
+        })
+
+    */
+    //   let checkedOrderIndex = 0;
+        checkBox.addEventListener('change', function () {
+
+            if (this.checked) {
+                console.log(this.checked);
+                this.parentElement.classList.add("checked");
+                console.log("Checkbox is checked..");
+                localStorage.setItem("listWhatAlredyDone", this.parentElement.innerHTML);
+            } else {
+                console.log("Checkbox is not checked..");
+                this.parentElement.classList.remove("checked");
+            }
+        });
     }
 
-/*
-    function createTodo() {
-        const li = document.createElement("li");
-        const textSpan = document.createElement("span");
-        textSpan.classList.add("todo-text");
-        const newTodo = input.value;
-        textSpan.append(newTodo);
 
-        const deleteBtn = document.createElement("span");
-        deleteBtn.classList.add("todo-trash");
-        const icon = document.createElement("i");
-        icon.classList.add("fas", "fa-trash-alt");
-        deleteBtn.appendChild(icon);
-
-        ul.appendChild(li).append(textSpan, deleteBtn);
-        input.value = "";
-        listenDeleteTodo(deleteBtn);
-    }
-*/
-    inputTodo.addEventListener("keypress", (keyPressed) => {
-        const keyEnter = 13;
-        if (keyPressed.which == keyEnter) {
+    inputTodo.addEventListener("keyup", function(e) {
+        if (e.which === 13) {
+            console.log(e.target.value);
             createTodo();
         }
     });
 
-    todoList.addEventListener("click", onClickTodo);
-
+    let todoAdd = document.querySelector(".todo_add");
+    todoAdd.addEventListener('click', () => {
+        createTodo();
+    }); 
+ 
     inputTodo.addEventListener('dblclick', () => {
             console.log('create todo dblClick');
             createTodo();
@@ -257,14 +293,6 @@ function onPageLoaded() {
             event.stopPropagation();
         });
     }
-
-    function checkDone(event) {
-        if (event.target.tagName === "LI") {
-            event.target.classList.toggle("checked");
-        }
-    }
-
-    todoLabel.addEventListener("click", checkDone);
 
     saveListButton.addEventListener("click", ()=> {
         localStorage.setItem("todoList", todoList.innerHTML);
@@ -285,6 +313,37 @@ function onPageLoaded() {
             listenDeleteTodos(button);
         }
     }
+
+    showListDone.addEventListener("click", ()=> {
+        console.log("show list done");
+        listDone.style.display = 'flex';
+        todoAppContainer.style.display = 'none';
+
+        const listItemDone = document.createElement('UL');
+        listItemDone.classList.add('list_item_done');
+        listDone.appendChild(listItemDone);
+
+        const itemDone = document.createElement('LI');
+        itemDone.classList.add('item_done');
+        listItemDone.appendChild(itemDone);
+
+        let temporary = document.createElement('p');
+        temporary.innerHTML = localStorage.getItem("listWhatAlredyDone");
+        
+        itemDone.appendChild(temporary.lastChild);
+    });
+
+    const backButton = document.querySelector(".back_button");
+    backButton.addEventListener('click', ()=> {
+        console.log('list done is closed');
+        listDone.style.display = 'none';
+        todoAppContainer.style.display = 'flex';
+    })
+
+    
+
+
+    
 
     loadTodos();
 }
