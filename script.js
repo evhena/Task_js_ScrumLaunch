@@ -223,56 +223,22 @@ function onPageLoaded() {
         todoItem.appendChild(iconTrash);
         deleteTodos(iconTrash);
         
-    /*    const chackedItems = [];
-        if (this.parentElement.classList.contains("checked")) {
-            
-        }
-      
-        chackedItems.forEach(el => {
-            el.addEventListener('change', () => {
-                if (this.checked) {
-                    console.log(this.checked);
-                    this.parentElement.classList.add("checked");
-                    console.log("Checkbox is checked..");
-                    let array = [];
-                    array.push(this.parentElement);
-                    console.log(array);
-                    localStorage.setItem("listWhatAlredyDone", this.parentElement.innerHTML);
 
-                    let temporaryWrapper = document.createElement('p');
-                    temporaryWrapper.innerHTML = localStorage.getItem("listWhatAlredyDone");
-                    let temporaryElement = temporaryWrapper.innerHTML;
-                    console.log(temporaryElement);
-                    let arr = [];
-                    arr.push(temporaryElement);
-                    console.log(arr);
-                } else {
-                    console.log("Checkbox is not checked..");
-                    this.parentElement.classList.remove("checked");
-                }
-            });
-        })
-
-    */
-    //   let checkedOrderIndex = 0;
         checkBox.addEventListener('change', function () {
-
             if (this.checked) {
-                console.log(this.checked);
                 this.parentElement.classList.add("checked");
                 console.log("Checkbox is checked..");
                 localStorage.setItem("listWhatAlredyDone", this.parentElement.innerHTML);
             } else {
                 console.log("Checkbox is not checked..");
                 this.parentElement.classList.remove("checked");
-            }
+            }   
         });
     }
 
 
     inputTodo.addEventListener("keyup", function(e) {
         if (e.which === 13) {
-            console.log(e.target.value);
             createTodo();
         }
     });
@@ -314,23 +280,39 @@ function onPageLoaded() {
         }
     }
 
+    
     showListDone.addEventListener("click", ()=> {
         console.log("show list done");
         listDone.style.display = 'flex';
         todoAppContainer.style.display = 'none';
-
+        
         const listItemDone = document.createElement('UL');
         listItemDone.classList.add('list_item_done');
         listDone.appendChild(listItemDone);
+ 
+        let arrAllTasksLi = Array.from(document.querySelectorAll(".todo_list_item"));
 
-        const itemDone = document.createElement('LI');
-        itemDone.classList.add('item_done');
-        listItemDone.appendChild(itemDone);
+        let arrAllTasksLabels = [];
+        for (let i=0; arrAllTasksLi.length > i; i++) {
+            let labelItem = arrAllTasksLi[i].firstChild;
+            arrAllTasksLabels.push(labelItem);
+           
+        }
+    
+        let arrAllTasksChecked = [];
+        arrAllTasksLabels.forEach((label)=>{
+            if (label.classList.contains("checked")) {
+                let newChecked = label.innerTex;
+                arrAllTasksChecked.push(label.innerText); 
+            }
+        })
 
-        let temporary = document.createElement('p');
-        temporary.innerHTML = localStorage.getItem("listWhatAlredyDone");
-        
-        itemDone.appendChild(temporary.lastChild);
+        arrAllTasksChecked.forEach((el)=>{
+            const itemDone = document.createElement('LI');
+            itemDone.classList.add('item_done');
+            listItemDone.appendChild(itemDone);
+            itemDone.innerHTML = el;
+        })
     });
 
     const backButton = document.querySelector(".back_button");
@@ -339,11 +321,6 @@ function onPageLoaded() {
         listDone.style.display = 'none';
         todoAppContainer.style.display = 'flex';
     })
-
-    
-
-
-    
 
     loadTodos();
 }
