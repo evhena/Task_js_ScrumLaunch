@@ -28,7 +28,7 @@ homeButton.addEventListener('click', function(evt) {
 function startScreen() {
     if (offScreen.classList.contains('active_screen')) {
         preloader.style.display = 'block';
-        setTimeout(showBlockedScreen, 3000);  //3000
+        setTimeout(showBlockedScreen, 0);  //3000
     }
 }
 
@@ -142,16 +142,15 @@ const cameraAppContainer = document.querySelector('.camera_app_container');
 cameraApp.addEventListener('click', function() {
     homeScreen.classList.remove("active_screen");
     cameraAppContainer.classList.add("active_screen");
+    let video = document.getElementById('video');
+
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+            video.srcObject = stream;
+            video.play();
+        }).catch(function(err) { console.log(err.name + ": " + err.message); });
+    };
 });
-
-var video = document.getElementById('video');
-
-if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
-        video.srcObject = stream;
-        video.play();
-    });
-};
 
 var canvas = document.getElementById('canvas');
 var context = canvas.getContext('2d');
@@ -216,14 +215,79 @@ function onPageLoaded() {
         
         let newTodo = inputTodo.value;
         
+        
+        
         if (newTodo) {
             todoText.innerHTML = newTodo;
             todoList.appendChild(todoItem);
             todoLabel.appendChild(checkBox);
             todoLabel.appendChild(todoText);
             todoItem.appendChild(todoLabel);
+
+            let date = new Date;
+            let list = new Object;
+            let item = new Object;
+            let listAllItems = new Object;
+            let key = newTodo + ' ' + date.toLocaleString();
+            let text = "";
+            let status = "";
+            let created_at = "";
+            list[key] = item;
+
+            
+            
+            item.text = newTodo;
+            item.status = 'active';
+            item.created_at = date.toLocaleString();
+
+            
+
+            console.log(item);
+            console.log(list);
+
+            /*
+
+            let list = {
+                id: {
+                    text: inputTodo.value,
+                    status: 'active',
+                    created_at: date.toLocaleString()
+                    },
+                
+            }
+            
+            function createObject (newTodo) {
+              list.push([newTodo, newTodo[text]]); 
+            }
+
+            createObject();
+            */
+         //   localStorage.setItem("list", JSON.stringify("list"));
+         //   listGet = JSON.parse(localStorage.getItem("list"));
+
+         //   console.log(typeof object);
+         //   console.log(list);
+        }
+        
+        list.push(item);
+        
+        
+        
+         
+
+        if (checked) {
+            list[id].status = 'done';
+
         }
 
+        
+        
+        function addItemToLocalStorage(item) {
+
+        }
+
+        
+        
         inputTodo.value = "";
 
         const iconTrash = document.createElement("I");
@@ -242,6 +306,8 @@ function onPageLoaded() {
                 this.parentElement.classList.remove("checked");
             }   
         });
+
+        
     }
 
 
@@ -288,7 +354,6 @@ function onPageLoaded() {
         }
     }
 
-    
     showListDone.addEventListener("click", ()=> {
         todoAppContainer.classList.remove("active_screen");
         todoDoneContainer.classList.add("active_screen");
@@ -322,7 +387,6 @@ function onPageLoaded() {
 
     const backButton = document.querySelector(".back_button");
     backButton.addEventListener('click', ()=> {
-        console.log('list done is closed');
         todoDoneContainer.classList.remove("active_screen");
         todoAppContainer.classList.add("active_screen");
     })
