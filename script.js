@@ -6,6 +6,7 @@ const turnUpVolume = document.querySelector('.turn_up_volume');
 const turnDownVolume = document.querySelector('.turn_down_volume');
 const frontSpeaker = document.querySelector('.front_speaker');
 const screenPhone = document.querySelector('.screen');
+const offScreen = document.querySelector('.off_screen');
 const blockedScreen = document.querySelector('.blocked_screen');
 const homeScreen = document.querySelector('.home_screen');
 const unblockedContainer = document.querySelector('.unblocked_container');
@@ -13,7 +14,7 @@ const homeButton = document.querySelector('.home_button');
 const preloader = document.querySelector('.preloader');
 
 preloader.style.display = 'none';
-screenPhone.classList.add('.offScreen');
+offScreen.classList.add('active_screen');
 
 homeButton.addEventListener('click', function(evt) {
     if (evt.detail === 3) {
@@ -25,17 +26,16 @@ homeButton.addEventListener('click', function(evt) {
 });
 
 function startScreen() {
-    if (screenPhone.classList.contains('.offScreen')) {
+    if (offScreen.classList.contains('active_screen')) {
         preloader.style.display = 'block';
-        setTimeout(showBlockedScreen, 0);  //3000
+        setTimeout(showBlockedScreen, 3000);  //3000
     }
 }
 
 function showBlockedScreen() {
     preloader.style.display = 'none';
-    screenPhone.classList.remove('.offScreen')
-    blockedScreen.style.display = 'flex';
-    screenPhone.style.backgroundImage = "url('https://im.bloha.ru/bh/2s.jpg')";
+    offScreen.classList.remove('active_screen');
+    blockedScreen.classList.add('active_screen');
 }
 
 
@@ -50,10 +50,9 @@ function phoneOFF() {
 
 function showOFFScreen() {
     preloader.style.display = 'none';
-    blockedScreen.style.display = 'none';
-    homeScreen.style.display = 'none';
-    screenPhone.style.backgroundImage = "";
-    screenPhone.classList.add('.offScreen');
+    blockedScreen.classList.remove("active_screen");
+    homeScreen.classList.remove("active_screen");
+    offScreen.classList.add('active_screen');
 }
 
 homeButton.addEventListener("mousedown", function() {
@@ -78,15 +77,24 @@ const time = document.querySelector('.time');
 const date = document.querySelector('.date');
 let currentDate = new Date();
 
-function getCurrentTimeString(dots) {
-    var timeString = currentDate.toTimeString().replace(/:[0-9]{2,2} .*/, '');
-    return dots ? timeString : timeString.replace(/:/, ' ');
+// function getCurrentTimeString(dots) {
+//     var timeString = currentDate.toTimeString().replace(/:[0-9]{2,2} .*/, '');
+//     return dots ? timeString : timeString.replace(/:/, ' ');
+// }
+
+// setInterval(
+//     function() { 
+//        time.innerHTML = getCurrentTimeString(Math.round(Date.now() / 1000) % 2);
+//     },
+//     1000
+// );
+
+function getCurrentTime() {
+    return new Date().toTimeString().replace(/ .*/, '');
 }
 
 setInterval(
-    function() { 
-       time.innerHTML = getCurrentTimeString(Math.round(Date.now() / 1000) % 2);
-    },
+    () => time.innerHTML = getCurrentTime(),
     1000
 );
 
@@ -102,8 +110,8 @@ let unblockPhone = document.getElementById('unblockPhone');
 
 unblockPhone.addEventListener("change", function(evt) {
     if (this.value == 100) {
-      blockedScreen.style.display = 'none';
-      homeScreen.style.display = 'grid';
+      blockedScreen.classList.remove("active_screen");
+      homeScreen.classList.add("active_screen");
     }
     this.value = 0;
 }); 
@@ -116,10 +124,10 @@ const closeAppButtons = Array.from(document.querySelectorAll('.close_button'));
 
 closeAppButtons.forEach(button => {
     button.addEventListener('click', () => {
-        cameraAppContainer.style.display = 'none';
-        musicAppContainer.style.display = 'none';
-        todoAppContainer.style.display = 'none';
-        homeScreen.style.display = 'grid';
+        cameraAppContainer.classList.remove("active_screen");
+        musicAppContainer.classList.remove("active_screen");
+        todoAppContainer.classList.remove("active_screen");
+        homeScreen.classList.add("active_screen");
     });
 })
 
@@ -132,8 +140,8 @@ const cameraApp = document.querySelector('.camera_app');
 const cameraAppContainer = document.querySelector('.camera_app_container');
 
 cameraApp.addEventListener('click', function() {
-    homeScreen.style.display = 'none';
-    cameraAppContainer.style.display = 'flex';  
+    homeScreen.classList.remove("active_screen");
+    cameraAppContainer.classList.add("active_screen");
 });
 
 var video = document.getElementById('video');
@@ -166,8 +174,8 @@ const musicApp = document.querySelector('.music_app');
 const musicAppContainer = document.querySelector('.music_app_container');
 
 musicApp.addEventListener('click', function() {
-    homeScreen.style.display = 'none';
-    musicAppContainer.style.display = 'flex';  
+    homeScreen.classList.remove("active_screen");
+    musicAppContainer.classList.add("active_screen");
 });
 
 
@@ -179,11 +187,11 @@ musicApp.addEventListener('click', function() {
 
 const todoApp = document.querySelector('.todo_app');
 const todoAppContainer = document.querySelector('.todo_app_container');
-const listDone = document.querySelector(".list_done");
+const todoDoneContainer = document.querySelector(".todo_done_container");
 
 todoApp.addEventListener('click', () => {
-    homeScreen.style.display = 'none';
-    todoAppContainer.style.display = 'flex';
+    homeScreen.classList.remove("active_screen");
+    todoAppContainer.classList.add("active_screen");
 })
 
 function onPageLoaded() {
@@ -237,7 +245,7 @@ function onPageLoaded() {
     }
 
 
-    inputTodo.addEventListener("keyup", function(e) {
+    inputTodo.addEventListener('keyup', function(e) {
         if (e.which === 13) {
             createTodo();
         }
@@ -254,13 +262,13 @@ function onPageLoaded() {
     });
 
     function deleteTodos(el) {
-        el.addEventListener("click", (event) => {
+        el.addEventListener('click', (event) => {
             el.parentElement.remove();
             event.stopPropagation();
         });
     }
 
-    saveListButton.addEventListener("click", ()=> {
+    saveListButton.addEventListener('click', ()=> {
         localStorage.setItem("todoList", todoList.innerHTML);
     });
 
@@ -282,13 +290,11 @@ function onPageLoaded() {
 
     
     showListDone.addEventListener("click", ()=> {
-        console.log("show list done");
-        listDone.style.display = 'flex';
-        todoAppContainer.style.display = 'none';
-        
-        const listItemDone = document.createElement('UL');
-        listItemDone.classList.add('list_item_done');
-        listDone.appendChild(listItemDone);
+        todoAppContainer.classList.remove("active_screen");
+        todoDoneContainer.classList.add("active_screen");
+    
+        const listItemDone = document.querySelector('todo_done_list');
+    
  
         let arrAllTasksLi = Array.from(document.querySelectorAll(".todo_list_item"));
 
@@ -296,7 +302,6 @@ function onPageLoaded() {
         for (let i=0; arrAllTasksLi.length > i; i++) {
             let labelItem = arrAllTasksLi[i].firstChild;
             arrAllTasksLabels.push(labelItem);
-           
         }
     
         let arrAllTasksChecked = [];
@@ -318,8 +323,8 @@ function onPageLoaded() {
     const backButton = document.querySelector(".back_button");
     backButton.addEventListener('click', ()=> {
         console.log('list done is closed');
-        listDone.style.display = 'none';
-        todoAppContainer.style.display = 'flex';
+        todoDoneContainer.classList.remove("active_screen");
+        todoAppContainer.classList.add("active_screen");
     })
 
     loadTodos();

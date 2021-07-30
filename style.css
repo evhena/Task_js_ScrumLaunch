@@ -45,19 +45,57 @@
 }
 
 .screen{
-  background: black;
   height: 440px;
   margin-bottom: 10px;
   display: flex;
+  
   flex-direction: column;
-  /* background-image: url(https://im.bloha.ru/bh/2s.jpg); */
   background-size: cover;
   background-position: top;
   position: relative;
 }
 
+.off_screen{
+  background: black;
+  display: none;
+  flex-direction: column;
+  background-size: cover;
+  background-position: top;
+}
+
 .screen > *{
   flex:1;
+}
+.off_screen.active_screen {
+  display: flex;
+}
+
+.screen.active_screen {
+  display: flex;
+}
+
+.blocked_screen.active_screen {
+  display: flex;
+}
+
+.home_screen.active_screen {
+  display: grid;
+}
+
+.camera_app_container.active_screen {
+  display: flex;
+}
+
+.music_app_container.active_screen {
+  display: flex;
+}
+
+.todo_app_container.active_screen {
+  display: flex;
+}
+
+.todo_done_container.active_screen {
+    display: flex;
 }
 
 .showBackgroundImg{
@@ -109,6 +147,8 @@
 
 .blocked_screen {
   display: none;
+  background-image: url(https://im.bloha.ru/bh/2s.jpg);
+  background-size: cover;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
@@ -123,7 +163,7 @@
 }
 
 .time_container .time{
-  font-size: 70px;
+  font-size: 55px;
   margin: 0;
 }
 
@@ -139,18 +179,15 @@
   height: 50px;
 }
 
-.offScreen {
-}
-
 .home_screen{
-  padding: 10px;
-/*   display: grid; */
   display: none;
+  padding: 10px;
   grid-template-columns: repeat(4, 60px);
   grid-auto-rows: 55px;
   grid-column-gap: 3px;
   grid-row-gap: 3px;
   align-items: center;
+  background: linear-gradient(to bottom right, #b968c5, skyblue);
 }
 
 .home_screen > button{
@@ -158,9 +195,18 @@
   height:40px;
   background:white;
   border: none;
-  border-radius: 50%;
+  border-radius: 25%;
   margin: 0 auto;
   color: #000;
+  cursor: pointer;
+	transition: all 0.3s;
+  font-size: 28px;
+  text-align: center;
+}
+
+.home_screen > button:hover {
+	background: #fcad26;
+	color: #fff;
 }
 
 /*SPINNER*/
@@ -230,12 +276,6 @@
   font-size: 20px;
 }
 
-.camera_app,
-.audio_app,
-.todo_app {
-  
-}
-
 /*CAMERA*/
 
 .camera_app_container,
@@ -248,7 +288,6 @@
   justify-content: space-between;
   padding: 2px 0;
   background-color: black;
-  
 }
 
 .camera_app_menu {
@@ -455,7 +494,7 @@ input[type=checkbox] {
   color: #6d9393;
 }
 
-.list_done {
+.todo_done_container {
   display: none;
   flex-direction: column;
   align-items: start;

@@ -5,6 +5,7 @@
   <title>CodePen - pet project for trainee</title>
   <link rel="stylesheet" href="./style.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bad+Script">
 </head>
 <body>
@@ -17,6 +18,9 @@
   <div class="front_speaker"></div>
   <div class="screen">
     
+    <div class="off_screen">
+      
+    </div>
     <div class="preloader">
       <svg class="preloader__image" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
         <path fill="white"
@@ -40,9 +44,9 @@
     </div>
 
     <div class="home_screen">
-      <button class="camera_app">cam<i class="far fa-camera"></i></button>
-      <button class="music_app">music<i class="far fa-headphones-alt"></i></button>
-      <button class="todo_app">todo<i class="far fa-list-ul"></i></button>
+      <button class="camera_app"><i class="fas fa-camera"></i></button>
+      <button class="music_app"><i class="fas fa-music"></i></button>
+      <button class="todo_app"><i class="fas fa-list-alt"></i></button>
     </div>
 
     <div class="camera_app_container">
@@ -109,10 +113,10 @@
       </div>
     </div>
 
-    <div class="list_done">
+    <div class="todo_done_container">
       <span class="back_button"><i class="fas fa-sign-out-alt">Back to ToDo</i></span>
-
-
+      <ul class="todo_done_list">
+      </ul>
     </div>
    
   </div>
