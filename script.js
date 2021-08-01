@@ -177,6 +177,23 @@ musicApp.addEventListener('click', function() {
     musicAppContainer.classList.add("active_screen");
 });
 
+let audioPlayer = document.querySelector(".audio-player");
+const audio = new Audio("http://");
+console.dir(audio);
+
+audio.addEventListener("loadeddata", () => {
+//    audioPlayer.querySelector(".time.length").textContent = getTimeCodeFromNum(audio.duration);
+    audio.volume = 0.75;
+}, false);
+
+
+
+
+
+
+
+
+
 
 // 3.3 туду лист
 //   авторизация
