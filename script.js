@@ -187,214 +187,179 @@ musicApp.addEventListener('click', function() {
 const todoApp = document.querySelector('.todo_app');
 const todoAppContainer = document.querySelector('.todo_app_container');
 const todoDoneContainer = document.querySelector(".todo_done_container");
+const inputTodo = document.querySelector(".todo_input");
+let list = new Object;
 
 todoApp.addEventListener('click', () => {
     homeScreen.classList.remove("active_screen");
     todoAppContainer.classList.add("active_screen");
+    initLocalStorage();
 })
 
-function onPageLoaded() {
-    const inputTodo = document.querySelector(".todo_input");
-    const todoList = document.querySelector("ul.todo_list");
-    const saveListButton = document.querySelector(".button_save_list");
-    const clearListButton = document.querySelector(".button_clear_list");
-    const showListDone = document.querySelector(".button_list_done");
 
-    function createTodo() {
-        const todoItem = document.createElement("LI");
-        todoItem.classList.add("todo_list_item");
-        
-        const todoLabel = document.createElement("LABEL");
-        todoLabel.classList.add("todo_text_wrapper");
-        
-        const checkBox = document.createElement("INPUT");
-        checkBox.type = "checkbox";
-        
-        const todoText = document.createElement("SPAN");
-        todoText.classList.add("todo_text");
-        
-        let newTodo = inputTodo.value;
-        
-        
-        
-        if (newTodo) {
-            todoText.innerHTML = newTodo;
-            todoList.appendChild(todoItem);
-            todoLabel.appendChild(checkBox);
-            todoLabel.appendChild(todoText);
-            todoItem.appendChild(todoLabel);
+function createItem(sourceText, dateCreateItem) {
+    const item = new Object;
+    item.text = sourceText;
+    item.status = 'active';
+    item.created_at = dateCreateItem.toLocaleString();
+    return item;
+}
 
-            let date = new Date;
-            let list = new Object;
-            let item = new Object;
-            let listAllItems = new Object;
-            let key = newTodo + ' ' + date.toLocaleString();
-            let text = "";
-            let status = "";
-            let created_at = "";
-            list[key] = item;
 
-            
-            
-            item.text = newTodo;
-            item.status = 'active';
-            item.created_at = date.toLocaleString();
+function showItem(todoList, item, key) {
+    if (!item.text) {
+        console.log(`empty input`);
+        return;
+    }
+    const todoItem = document.createElement("LI");
+    todoItem.classList.add("todo_list_item");
+    
+    const todoLabel = document.createElement("LABEL");
+    todoLabel.classList.add("todo_text_wrapper");
+    
+    const checkBox = document.createElement("INPUT");
+    checkBox.type = "checkbox";
+    subscribeCheckItem(checkBox, key);
+    
+    if (item.status == 'done') {
+        todoLabel.classList.add("checked");
+        checkBox.checked = "true";
+    }
+    
+    const todoText = document.createElement("SPAN");
+    todoText.classList.add("todo_text");
 
-            
+    todoText.innerHTML = item.text;
+    todoList.appendChild(todoItem);
+    todoLabel.appendChild(checkBox);
+    todoLabel.appendChild(todoText);
+    todoItem.appendChild(todoLabel);
 
-            console.log(item);
-            console.log(list);
+    const iconTrash = document.createElement("I");
+    iconTrash.classList.add("far", "fa-trash-alt");
+    todoItem.appendChild(iconTrash);
+    subscribeDeleteItem(iconTrash, key); 
+}
 
-            /*
+//Del button
+function subscribeDeleteItem(el, key) {
+    el.addEventListener('click', (event) => {
+        list[key].status = 'deleted';
+        el.parentElement.remove();
+        saveToLocalStorage();
+        event.stopPropagation();
+    });
+}
 
-            let list = {
-                id: {
-                    text: inputTodo.value,
-                    status: 'active',
-                    created_at: date.toLocaleString()
-                    },
-                
-            }
-            
-            function createObject (newTodo) {
-              list.push([newTodo, newTodo[text]]); 
-            }
-
-            createObject();
-            */
-         //   localStorage.setItem("list", JSON.stringify("list"));
-         //   listGet = JSON.parse(localStorage.getItem("list"));
-
-         //   console.log(typeof object);
-         //   console.log(list);
+//Checkbox
+function subscribeCheckItem(el, key) {
+    el.addEventListener('change', function checkAndUncheck() {
+        if (this.checked) {
+            this.parentElement.classList.add("checked");
+            list[key].status = 'done';
+            setTimeout(() => {
+                this.parentElement.parentElement.remove();
+            }, 1000);  
+        } else {
+            list[key].status = 'active';
+            this.parentElement.classList.remove("checked");
+            setTimeout(() => {
+                this.parentElement.parentElement.remove();
+            }, 1000);
         }
-        
-        list.push(item);
-        
-        
-        
-         
+        saveToLocalStorage(); 
+    });
+}
 
-        if (checked) {
-            list[id].status = 'done';
 
-        }
+//listeners for Input
+let todoAdd = document.querySelector(".todo_add");
+todoAdd.addEventListener('click', () => {
+    textFromUser = inputTodo.value;
+    createTodoFromUser(textFromUser);
+    inputTodo.value = "";
+});
 
-        
-        
-        function addItemToLocalStorage(item) {
-
-        }
-
-        
-        
+inputTodo.addEventListener('keyup', function(e) {
+    if (e.which === 13) {
+        textFromUser = inputTodo.value;
+        createTodoFromUser(textFromUser);
         inputTodo.value = "";
-
-        const iconTrash = document.createElement("I");
-        iconTrash.classList.add("far", "fa-trash-alt");
-        todoItem.appendChild(iconTrash);
-        deleteTodos(iconTrash);
-        
-
-        checkBox.addEventListener('change', function () {
-            if (this.checked) {
-                this.parentElement.classList.add("checked");
-                console.log("Checkbox is checked..");
-                localStorage.setItem("listWhatAlredyDone", this.parentElement.innerHTML);
-            } else {
-                console.log("Checkbox is not checked..");
-                this.parentElement.classList.remove("checked");
-            }   
-        });
-
-        
     }
+});
+
+inputTodo.addEventListener('dblclick', () => {
+    textFromUser = inputTodo.value;
+    createTodoFromUser(textFromUser);
+    inputTodo.value = "";
+});
 
 
-    inputTodo.addEventListener('keyup', function(e) {
-        if (e.which === 13) {
-            createTodo();
+function createTodoFromUser(sourceText) {
+    const dateCreateItem = new Date;
+    const key = sourceText + '_' + dateCreateItem.getTime();
+    const item = createItem(textFromUser, dateCreateItem);
+    let todoList = document.querySelector("ul.todo_list");
+    list[key] = item;
+    showItem(todoList, item, key);
+    saveToLocalStorage(); 
+}
+
+
+function createTodoFromStorage() {
+    todoList = document.querySelector("ul.todo_list");
+    todoList.innerHTML = "";
+    for (key in list) {
+        if (list[key].status == "active") {
+            item = list[key];
+            showItem(todoList, item, key);
         }
-    });
+    };
+}
 
-    let todoAdd = document.querySelector(".todo_add");
-    todoAdd.addEventListener('click', () => {
-        createTodo();
-    }); 
- 
-    inputTodo.addEventListener('dblclick', () => {
-            console.log('create todo dblClick');
-            createTodo();
-    });
 
-    function deleteTodos(el) {
-        el.addEventListener('click', (event) => {
-            el.parentElement.remove();
-            event.stopPropagation();
-        });
+function initLocalStorage() {
+    if (localStorage.getItem('taskPhone_todoList') !== null) {
+        list = JSON.parse(localStorage.getItem("taskPhone_todoList"));
+        createTodoFromStorage(list);
+    } else {
+        saveToLocalStorage();
     }
+}
 
-    saveListButton.addEventListener('click', ()=> {
-        localStorage.setItem("todoList", todoList.innerHTML);
-    });
 
-    clearListButton.addEventListener("click", ()=> {
-        todoList.innerHTML = "";
-        localStorage.removeItem("todoList", todoList.innerHTML);
-    });
+function saveToLocalStorage() {
+    localStorage.setItem('taskPhone_todoList', JSON.stringify(list));
+    console.log(`List saved to local storage` +  JSON.stringify(list));
+}
 
-    function loadTodos() {
-        const data = localStorage.getItem("todoItem");
-        if (data) {
-            todoList.innerHTML = data;
-        }
-        const deleteButtons = document.querySelectorAll('todos_trash');
-        for (const button of deleteButtons) {
-            listenDeleteTodos(button);
+
+const showListDone = document.querySelector(".button_list_done");
+showListDone.addEventListener("click", ()=> {
+    todoAppContainer.classList.remove("active_screen");
+    todoDoneContainer.classList.add("active_screen");
+    createListItemDone(list);
+});
+
+function createListItemDone() {
+    todoList = document.querySelector("ul.todo_done_list");
+    todoList.innerHTML = "";
+    for (key in list) {
+        if (list[key].status == "done") {
+            item = list[key];
+            showItem(todoList, item, key);
         }
     }
-
-    showListDone.addEventListener("click", ()=> {
-        todoAppContainer.classList.remove("active_screen");
-        todoDoneContainer.classList.add("active_screen");
-    
-        const listItemDone = document.querySelector('todo_done_list');
-    
- 
-        let arrAllTasksLi = Array.from(document.querySelectorAll(".todo_list_item"));
-
-        let arrAllTasksLabels = [];
-        for (let i=0; arrAllTasksLi.length > i; i++) {
-            let labelItem = arrAllTasksLi[i].firstChild;
-            arrAllTasksLabels.push(labelItem);
-        }
-    
-        let arrAllTasksChecked = [];
-        arrAllTasksLabels.forEach((label)=>{
-            if (label.classList.contains("checked")) {
-                let newChecked = label.innerTex;
-                arrAllTasksChecked.push(label.innerText); 
-            }
-        })
-
-        arrAllTasksChecked.forEach((el)=>{
-            const itemDone = document.createElement('LI');
-            itemDone.classList.add('item_done');
-            listItemDone.appendChild(itemDone);
-            itemDone.innerHTML = el;
-        })
-    });
-
+   
     const backButton = document.querySelector(".back_button");
     backButton.addEventListener('click', ()=> {
         todoDoneContainer.classList.remove("active_screen");
         todoAppContainer.classList.add("active_screen");
+        initLocalStorage();
     })
-
-    loadTodos();
 }
 
-document.addEventListener("DOMContentLoaded", onPageLoaded);
+
 
 // ********
 // сделать поисковик аля браузер с использыванием фрейма
