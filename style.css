@@ -140,9 +140,22 @@
   transform: rotateZ(-20deg);
   transform-origin: left bottom;
 }
+
 .turn_down_volume{
   transform: rotateZ(20deg);
   transform-origin: right top;
+}
+
+.turn_up_volume:hover {
+  transform: rotateZ(-10deg);
+  transform-origin: left bottom;
+  transition: all 0.3s;
+}
+
+.turn_down_volume:hover {
+  transform: rotateZ(10deg);
+  transform-origin: right top;
+  transition: all 0.3s;
 }
 
 .blocked_screen {
@@ -520,13 +533,32 @@ input[type=checkbox] {
   justify-content: space-between;
   align-items: center;
   overflow: hidden;
+  position: relative;
+}
+
+.phone_volume {
+  width: 15px;
+  height: 125px;
+  display: flex;
+  align-items: flex-end;
+  z-index: 3;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #E8E9EB;
+  color: rgb(187, 188, 182);
+}
+
+.phone_volume-percentage {
+  background:gray;
+  height: 75%;
+  width: 100%;
 }
 
 audio {
   width: 100%;
   padding-bottom: 50px;
 }
-
 
 .audio-player {
   height: 50px;

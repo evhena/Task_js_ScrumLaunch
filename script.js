@@ -175,6 +175,7 @@ const musicAppContainer = document.querySelector('.music_app_container');
 musicApp.addEventListener('click', function() {
     homeScreen.classList.remove("active_screen");
     musicAppContainer.classList.add("active_screen");
+    listenDistanceToSpeaker();
 });
 
 let audioPlayer = document.querySelector(".audio-player");
@@ -259,7 +260,44 @@ function getTimeCodeFromNum(num) {
     if (hours === 0) return `${minutes}:${String(seconds % 60).padStart(2, 0)}`;
     return `${String(hours).padStart(2, 0)}:${minutes}:${String(seconds % 60).padStart(2, 0)}`;
 }
-  
+
+//calculate distance from mouse to speaker
+
+let mouseX, mouseY, volume, distance;
+let element = document.querySelector(".front_speaker");
+let phoneVolume = document.querySelector(".phone_volume");
+let phoneVolumePercentage = document.querySelector(".phone_volume-percentage");
+let maxDistance = 600;
+let coodrsSpeaker = element.getBoundingClientRect();
+let volumeHeight;
+
+
+
+function calculateDistance(elem, mouseX, mouseY) {
+    return Math.floor(Math.sqrt(Math.pow(mouseX - (coodrsSpeaker.left+(coodrsSpeaker.width/2)), 2) + Math.pow(mouseY - (coodrsSpeaker.top+(coodrsSpeaker.height/2)), 2)));
+}
+
+function listenDistanceToSpeaker() {
+    document.addEventListener('mousemove', function(e) {  
+        mouseX = e.pageX;
+        mouseY = e.pageY;
+        distance = calculateDistance(element, mouseX, mouseY);
+        volumeHeight = (100 - (distance * 100 / maxDistance));
+        phoneVolumePercentage.style.height = volumeHeight + '%';
+        audio.volume = volumeHeight/100;
+        return volumeHeight;
+    });
+}
+
+
+//behevior volume buttons
+
+volume_controls
+turn_up_volume
+turn_down_volume
+active
+
+ 
 
 // 3.3 туду лист
 //   авторизация
