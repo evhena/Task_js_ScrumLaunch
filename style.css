@@ -55,7 +55,7 @@
   position: relative;
 }
 
-.off_screen{
+.off_screen {
   background: black;
   display: none;
   flex-direction: column;
@@ -175,7 +175,6 @@
 .unblocked_container{
   width: 80%;
   margin: 0 auto;
- /* background: red;  */
   height: 50px;
 }
 
@@ -455,7 +454,6 @@
   cursor: pointer;
 }
 
-
 input[type=checkbox] {
   margin-right: 10px;
 }
@@ -472,8 +470,6 @@ input[type=checkbox] {
   margin-bottom: 10px;
 }
 
-.button_save_list,
-.button_clear_list,
 .button_list_done {
   border: none;
   background-color: #6d9393;
@@ -482,11 +478,10 @@ input[type=checkbox] {
   height: 30px;
 }
 
-.button_save_list:hover,
-.button_clear_list:hover,
 .button_list_done:hover {
   background-color: #fff;
   color: #6d9393;
+  transition: all 300ms linear;
 }
 
 .todo_done_container {
@@ -495,7 +490,9 @@ input[type=checkbox] {
   align-items: start;
   width: 100%;
   height: 100%;
-  background-color:teal;
+  background: linear-gradient(to left bottom, #f6f1d3, #648880 85%, #293f50); 
+/*background-image: url(./media/pirozhok.jpeg);
+  background-size: contain;*/
   z-index: 2;
 }
 
@@ -509,10 +506,17 @@ input[type=checkbox] {
   cursor: pointer;
 }
 
+.back_button:hover {
+  color: gray;
+  transition: all 300ms linear;
+}
+
 /*Player*/
 
 .music_app_container {
-  background: linear-gradient(to bottom right, #b968c5, skyblue);
+  background: #ebdbb9 url(./media/Moto.jpeg) no-repeat;
+  background-size: cover;
+  background-position: center;
   justify-content: space-between;
   align-items: center;
   overflow: hidden;
@@ -651,8 +655,7 @@ audio {
   width: 75%;
 }
       
-.volume-percentage:hover 
-.volume-slider {
+.volume-container:hover .volume-slider {
   left: -123px;
   width: 120px;
 }
