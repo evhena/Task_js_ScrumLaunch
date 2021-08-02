@@ -161,6 +161,20 @@ document.getElementById("snap").addEventListener("click", function() {
 });
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // 3.2 музыка :
 // на эране должно появится мултимедия с возможностю запустить/остановить музыку и прогрес музыки
 // звук должен выводится на девайс (громкость зависит от растояния курсора от динамика в верху телефона)
@@ -168,12 +182,10 @@ document.getElementById("snap").addEventListener("click", function() {
 
 const musicApp = document.querySelector('.music_app');
 const musicAppContainer = document.querySelector('.music_app_container');
-const currentVolume = .5;
 
 musicApp.addEventListener('click', function() {
     homeScreen.classList.remove("active_screen");
     musicAppContainer.classList.add("active_screen");
-    listenDistanceToSpeaker();
     listenVolumeButtons();
 });
 
@@ -183,13 +195,20 @@ const audio = new Audio(
 );
 console.dir(audio);
 
+
+
+let currentVolume = audio.volume;
+
+
+
 audio.addEventListener(
     "loadeddata",
     () => {
+        console.log('asd')
       audioPlayer.querySelector(".time .length").textContent = getTimeCodeFromNum(
         audio.duration
       );
-      audio.volume = .75;
+      currentVolume = audio.volume = .75;
     },
     false
   );
@@ -200,16 +219,29 @@ timeline.addEventListener("click", e => {
     const timelineWidth = window.getComputedStyle(timeline).width;
     const timeToSeek = e.offsetX / parseInt(timelineWidth) * audio.duration;
     audio.currentTime = timeToSeek;
+    console.log("currentVolume", currentVolume,  audio.volume);
 }, false);
+
+
+
+
+
 
 //click volume slider to change volume
 const volumeSlider = audioPlayer.querySelector(".controls .volume-slider");
 volumeSlider.addEventListener('click', e => {
     const sliderWidth = window.getComputedStyle(volumeSlider).width;
     let newVolume = e.offsetX / parseInt(sliderWidth);
-    audio.volume = newVolume;
-    audioPlayer.querySelector(".controls .volume-percentage").style.width = newVolume * 100 + '%';
+    currentVolume = newVolume;
+    changeVolumeStyle();
+    setNewVolume();
 }, false)
+
+
+
+
+
+
 
 //check audio percentage and update time accordingly
 setInterval(() => {
@@ -232,9 +264,7 @@ playBtn.addEventListener("click", () => {
         playBtn.classList.add("play");
         audio.pause();
     }
-}, 
-false
-);
+}, false);
 
 audioPlayer.querySelector(".volume-button").addEventListener("click", () => {
     const volumeEl = audioPlayer.querySelector(".volume-container .volume");
@@ -242,9 +272,11 @@ audioPlayer.querySelector(".volume-button").addEventListener("click", () => {
     if (audio.muted) {
         volumeEl.classList.remove("icono-volumeMedium");
         volumeEl.classList.add("icono-volumeMute");
+        console.log("currentVolume", currentVolume);
     } else {
         volumeEl.classList.add("icono-volumeMedium");
         volumeEl.classList.remove("icono-volumeMute");
+        console.log("currentVolume", currentVolume,  audio.volume);
     }
 });
 
@@ -262,14 +294,14 @@ function getTimeCodeFromNum(num) {
 
 //calculate distance from mouse to speaker
 
-let mouseX, mouseY, volume, distance;
+let mouseX, mouseY, volume, distance, speakerClosestyCoefficient;
 let element = document.querySelector(".front_speaker");
 let maxDistance = 800;
 let coodrsSpeaker = element.getBoundingClientRect();
-let speakerClosestyCoefficient;
 
-function calculateDistance(elem, mouseX, mouseY) {
-    return Math.floor(Math.sqrt(Math.pow(mouseX - (coodrsSpeaker.left+(coodrsSpeaker.width/2)), 2) + Math.pow(mouseY - (coodrsSpeaker.top+(coodrsSpeaker.height/2)), 2)));
+function calculateDistance(mouseX, mouseY) {
+    return Math.floor(Math.sqrt(Math.pow(mouseX - (coodrsSpeaker.left+(coodrsSpeaker.width/2)), 2) + 
+        Math.pow(mouseY - (coodrsSpeaker.top+(coodrsSpeaker.height/2)), 2)));
 }
 
 //add it if music playing
@@ -277,53 +309,84 @@ function listenDistanceToSpeaker(newVolume) {
     document.addEventListener('mousemove', function(e) {  
         mouseX = e.pageX;
         mouseY = e.pageY;
-        distance = calculateDistance(element, mouseX, mouseY);
+        distance = calculateDistance( mouseX, mouseY);
         speakerClosestyCoefficient = (100 - (distance * 100 / maxDistance)) / 100;
-        console.log("speakerClosestyCoefficient" + speakerClosestyCoefficient);
-        //think about one call audio.volume and when we should add speakerClosestyCoefficient
-        let currentVolume = newVolume * speakerClosestyCoefficient;
-        audio.volume = currentVolume;
+        console.log(speakerClosestyCoefficient)
+        setNewVolume()
+    // console.log("speakerClosestyCoefficient" + speakerClosestyCoefficient);
+    //think about one call audio.volume and when we should add speakerClosestyCoefficient
     });
+}
+
+function setNewVolume(){
+    audio.volume = currentVolume * speakerClosestyCoefficient;
 }
 
 
 //behavior volume buttons
 
 let volumeControls = document.querySelector(".volume_controls");
-let ternUpVolume = document.querySelector(".turn_up_volume");
-let ternDownVolume = document.querySelector(".turn_down_volume");
+let turnUpVolume = document.querySelector(".turn_up_volume");
+let turnDownVolume = document.querySelector(".turn_down_volume");
 let phoneVolume = document.querySelector(".phone_volume");
 let phoneVolumePercentage = document.querySelector(".phone_volume-percentage");
 
 
-function listenVolumeButtons(currentVolume) {
-    console.log("currentVolume " + currentVolume);
-    phoneVolumePercentage.style.height = currentVolume * 100 + '%';
+function listenVolumeButtons() {
+    console.log('here')
+    console.log("currentVolume", currentVolume);
+    listenDistanceToSpeaker();
 
-    ternUpVolume.addEventListener("click", ()=> {
-        ternUpVolume.classList.add = "active";
-        phoneVolumePercentage.style.height = newVolume;
+    console.log("currentVolume", currentVolume);
+
+    turnUpVolume.addEventListener('click', e => {
+        console.log("click turn UP volume");
+        turnUpVolume.classList.add = "active";
+        phoneVolume.classList.add = "show";
+        setTimeout(()=>{phoneVolume.classList.remove = "show"}, 3000); 
+        phoneVolumePercentage.style.height = currentVolume * 100 + '%';
+
         if (currentVolume < 0.9) {
-            let oneClickVolumeUp = currentVolume + 0.1;
-            phoneVolumePercentage.style.height = oneClickVolumeUp * 100 + '%';
-            console.log("oneClickVolumeUp " + oneClickVolumeUp);
-            currentVolume = oneClickVolumeUp;
+            currentVolume = currentVolume + 0.1;
+            changeVolumeStyle();
+            setNewVolume()
         };
-    })
+    }, false)
 
-    ternDownVolume.addEventListener("click", ()=> {
-        ternDownVolume.classList.add = "active";
-        phoneVolumePercentage.style.height = newVolume;
+    turnDownVolume.addEventListener("click", ()=> {
+        console.log("click turn DOWN volume");
+        turnDownVolume.classList.add = "active";
+        phoneVolume.classList.add = "show";
+        setTimeout(()=>{phoneVolume.classList.remove = "show"}, 3000); 
+
+        phoneVolumePercentage.style.height = currentVolume * 100 + '%';
         if (currentVolume > 0.1) {
-            let oneClickVolumeDown = currentVolume - 0.1;
-            phoneVolumePercentage.style.height = oneClickVolumeDown * 100 + '%';
-            console.log("oneClickVolumeDown " + oneClickVolumeDown);
-            currentVolume = oneClickVolumeDown;
+            currentVolume = currentVolume - 0.1;
+            changeVolumeStyle();
+            setNewVolume()
         }
-    })
-    audio.volume = currentVolume;
-    //combine two lines in one logic to display one range of volume
+    }) 
 }
+
+
+function changeVolumeStyle() {
+    phoneVolumePercentage.style.height = currentVolume * 100 + '%';
+    audioPlayer.querySelector(".controls .volume-percentage").style.width = currentVolume * 100 + '%';
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // 3.3 туду лист

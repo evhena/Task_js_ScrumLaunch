@@ -549,6 +549,10 @@ input[type=checkbox] {
   color: rgb(187, 188, 182);
 }
 
+.phone_volume.show {
+  display: flex;
+}
+
 .phone_volume-percentage {
   background:gray;
   height: 75%;
