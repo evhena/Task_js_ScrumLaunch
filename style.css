@@ -146,13 +146,13 @@
   transform-origin: right top;
 }
 
-.turn_up_volume:hover {
+.turn_up_volume.active {
   transform: rotateZ(-10deg);
   transform-origin: left bottom;
   transition: all 0.3s;
 }
 
-.turn_down_volume:hover {
+.turn_down_volume.active {
   transform: rotateZ(10deg);
   transform-origin: right top;
   transition: all 0.3s;
