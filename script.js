@@ -25,7 +25,7 @@ homeButton.addEventListener('click', function(evt) {
 function startScreen() {
     if (offScreen.classList.contains('active_screen')) {
         preloader.style.display = 'block';
-        setTimeout(showBlockedScreen, 0);  //3000
+        setTimeout(showBlockedScreen, 3000);  //3000
     }
 }
 
@@ -492,7 +492,6 @@ function initLocalStorage() {
 
 function saveToLocalStorage() {
     localStorage.setItem('taskPhone_todoList', JSON.stringify(list));
-    console.log(`List saved to local storage` +  JSON.stringify(list));
 }
 
 
@@ -522,7 +521,7 @@ function createListItemDone() {
 }
 
 
-// во всех приложениях должна быть возможность закрыть его
+// close button for all applications
 
 const closeAppButtons = Array.from(document.querySelectorAll('.close_button'));
 
