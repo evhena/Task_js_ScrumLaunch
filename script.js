@@ -25,7 +25,7 @@ homeButton.addEventListener('click', function(evt) {
 function startScreen() {
     if (offScreen.classList.contains('active_screen')) {
         preloader.style.display = 'block';
-        setTimeout(showBlockedScreen, 0);  //3000
+        setTimeout(showBlockedScreen, 3000);  //3000
     }
 }
 
@@ -118,6 +118,8 @@ unblockPhone.addEventListener("change", function(evt) {
 // во всех приложениях должна быть возможность закрыть его
 
 const closeAppButtons = Array.from(document.querySelectorAll('.close_button'));
+const turnUpVolume = document.querySelector(".turn_up_volume");
+const turnDownVolume = document.querySelector(".turn_down_volume");
 
 closeAppButtons.forEach(button => {
     button.addEventListener('click', () => {
@@ -125,11 +127,13 @@ closeAppButtons.forEach(button => {
         musicAppContainer.classList.remove("active_screen");
         todoAppContainer.classList.remove("active_screen");
         homeScreen.classList.add("active_screen");
+        turnUpVolume.removeEventListener('click', turnUpVolumeListener, false);
+        turnDownVolume.removeEventListener("click", turnDownVolumeListener, false);
+        document.removeEventListener('mousemove', listenMouseMoveCloserToSpeaker, false);
     });
 })
 
 
-    
 // 3.1 камера :
 // при запуске этого приложеня на экране телефона должно вывестись изображение с камеры ноутбука или другого девайса
 
@@ -161,20 +165,6 @@ document.getElementById("snap").addEventListener("click", function() {
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // 3.2 музыка :
 // на эране должно появится мултимедия с возможностю запустить/остановить музыку и прогрес музыки
 // звук должен выводится на девайс (громкость зависит от растояния курсора от динамика в верху телефона)
@@ -182,36 +172,29 @@ document.getElementById("snap").addEventListener("click", function() {
 
 const musicApp = document.querySelector('.music_app');
 const musicAppContainer = document.querySelector('.music_app_container');
+let audioPlayer = document.querySelector(".audio-player");
 
 musicApp.addEventListener('click', function() {
     homeScreen.classList.remove("active_screen");
     musicAppContainer.classList.add("active_screen");
     listenVolumeButtons();
+    listenPlayPauseButton();
+    listenVolumeIconToMute();
 });
 
-let audioPlayer = document.querySelector(".audio-player");
-const audio = new Audio(
+
+let audio = new Audio(
     "https://ia800905.us.archive.org/19/items/FREE_background_music_dhalius/backsound.mp3"
 );
 console.dir(audio);
 
-
-
 let currentVolume = audio.volume;
+const timeLength = audioPlayer.querySelector(".time .length");
 
-
-
-audio.addEventListener(
-    "loadeddata",
-    () => {
-        console.log('asd')
-      audioPlayer.querySelector(".time .length").textContent = getTimeCodeFromNum(
-        audio.duration
-      );
-      currentVolume = audio.volume = .75;
-    },
-    false
-  );
+audio.addEventListener("loadeddata", ()=>{
+    timeLength.textContent = getTimeCodeFromNum(audio.duration);
+    currentVolume = audio.volume = .75;
+}, false);
 
 //click on timeline to skip around
 const timeline = audioPlayer.querySelector(".timeline");
@@ -219,29 +202,7 @@ timeline.addEventListener("click", e => {
     const timelineWidth = window.getComputedStyle(timeline).width;
     const timeToSeek = e.offsetX / parseInt(timelineWidth) * audio.duration;
     audio.currentTime = timeToSeek;
-    console.log("currentVolume", currentVolume,  audio.volume);
 }, false);
-
-
-
-
-
-
-//click volume slider to change volume
-const volumeSlider = audioPlayer.querySelector(".controls .volume-slider");
-volumeSlider.addEventListener('click', e => {
-    const sliderWidth = window.getComputedStyle(volumeSlider).width;
-    let newVolume = e.offsetX / parseInt(sliderWidth);
-    currentVolume = newVolume;
-    changeVolumeStyle();
-    setNewVolume();
-}, false)
-
-
-
-
-
-
 
 //check audio percentage and update time accordingly
 setInterval(() => {
@@ -253,32 +214,38 @@ setInterval(() => {
 }, 500);
 
 //toggle between playing and pausing on button click
-const playBtn = audioPlayer.querySelector(".controls .toggle-play");
-playBtn.addEventListener("click", () => {
-    if (audio.paused) {
-        playBtn.classList.remove("play");
-        playBtn.classList.add("pause");
-        audio.play();
-    } else {
-        playBtn.classList.remove("pause");
-        playBtn.classList.add("play");
-        audio.pause();
-    }
-}, false);
 
-audioPlayer.querySelector(".volume-button").addEventListener("click", () => {
-    const volumeEl = audioPlayer.querySelector(".volume-container .volume");
-    audio.muted = !audio.muted;
-    if (audio.muted) {
-        volumeEl.classList.remove("icono-volumeMedium");
-        volumeEl.classList.add("icono-volumeMute");
-        console.log("currentVolume", currentVolume);
-    } else {
-        volumeEl.classList.add("icono-volumeMedium");
-        volumeEl.classList.remove("icono-volumeMute");
-        console.log("currentVolume", currentVolume,  audio.volume);
-    }
-});
+function listenPlayPauseButton() {
+    const playBtn = audioPlayer.querySelector(".controls .toggle-play");
+    playBtn.addEventListener("click", () => {
+        if (audio.paused) {
+            playBtn.classList.remove("play");
+            playBtn.classList.add("pause");
+            audio.play();
+        } else {
+            playBtn.classList.remove("pause");
+            playBtn.classList.add("play");
+            audio.pause();
+        }
+    }, false);
+}
+
+const volumeIcon = audioPlayer.querySelector(".volume-button");
+const volumeEl = audioPlayer.querySelector(".volume-container .volume");
+function listenVolumeIconToMute() {
+    volumeIcon.addEventListener("click", () => {
+        audio.muted = !audio.muted;
+        if (audio.muted) {
+            volumeEl.classList.remove("icono-volumeMedium");
+            volumeEl.classList.add("icono-volumeMute");
+            console.log("currentVolume", currentVolume);
+        } else {
+            volumeEl.classList.add("icono-volumeMedium");
+            volumeEl.classList.remove("icono-volumeMute");
+            console.log("currentVolume", currentVolume,  audio.volume);
+        }
+    });
+}
 
 //turn 128 seconds into 2:08
 function getTimeCodeFromNum(num) {
@@ -293,100 +260,89 @@ function getTimeCodeFromNum(num) {
 }
 
 //calculate distance from mouse to speaker
-
-let mouseX, mouseY, volume, distance, speakerClosestyCoefficient;
-let element = document.querySelector(".front_speaker");
-let maxDistance = 800;
-let coodrsSpeaker = element.getBoundingClientRect();
+let mouseX, mouseY;
 
 function calculateDistance(mouseX, mouseY) {
+    let speaker = document.querySelector(".front_speaker");
+    let coodrsSpeaker = speaker.getBoundingClientRect();
     return Math.floor(Math.sqrt(Math.pow(mouseX - (coodrsSpeaker.left+(coodrsSpeaker.width/2)), 2) + 
         Math.pow(mouseY - (coodrsSpeaker.top+(coodrsSpeaker.height/2)), 2)));
 }
 
-//add it if music playing
+//when we take closer to speaker music become louder
+let speakerClosestyCoefficient;
+
+let listenMouseMoveCloserToSpeaker = function(e) {
+    let maxDistance = 800;
+    mouseX = e.pageX;
+    mouseY = e.pageY;
+    let distance = calculateDistance( mouseX, mouseY);
+    speakerClosestyCoefficient = (100 - (distance * 100 / maxDistance)) / 100;
+    //console.log(speakerClosestyCoefficient)
+    setNewVolume()
+    }
+
 function listenDistanceToSpeaker(newVolume) {
-    document.addEventListener('mousemove', function(e) {  
-        mouseX = e.pageX;
-        mouseY = e.pageY;
-        distance = calculateDistance( mouseX, mouseY);
-        speakerClosestyCoefficient = (100 - (distance * 100 / maxDistance)) / 100;
-        console.log(speakerClosestyCoefficient)
-        setNewVolume()
-    // console.log("speakerClosestyCoefficient" + speakerClosestyCoefficient);
-    //think about one call audio.volume and when we should add speakerClosestyCoefficient
-    });
+    document.addEventListener('mousemove', listenMouseMoveCloserToSpeaker, false);
 }
 
 function setNewVolume(){
     audio.volume = currentVolume * speakerClosestyCoefficient;
 }
 
+//click volume slider to change volume
+const volumeSlider = audioPlayer.querySelector(".controls .volume-slider");
+volumeSlider.addEventListener('click', e => {
+    const sliderWidth = window.getComputedStyle(volumeSlider).width;
+    let newVolume = e.offsetX / parseInt(sliderWidth);
+    currentVolume = newVolume;
+    changeVolumeStyle();
+    setNewVolume();
+}, false)
 
-//behavior volume buttons
-
-let volumeControls = document.querySelector(".volume_controls");
-let turnUpVolume = document.querySelector(".turn_up_volume");
-let turnDownVolume = document.querySelector(".turn_down_volume");
-let phoneVolume = document.querySelector(".phone_volume");
+//behavior phone volume buttons
 let phoneVolumePercentage = document.querySelector(".phone_volume-percentage");
+let phoneVolume = document.querySelector(".phone_volume");
 
+let turnUpVolumeListener = function(event) {
+    console.log("click turn UP volume");
+    turnUpVolume.classList.add = "active";
+    phoneVolume.classList.add = "show";
+    setTimeout(()=>{phoneVolume.classList.remove = "show"}, 3000); 
+    phoneVolumePercentage.style.height = currentVolume * 100 + '%';
 
-function listenVolumeButtons() {
-    console.log('here')
-    console.log("currentVolume", currentVolume);
-    listenDistanceToSpeaker();
-
-    console.log("currentVolume", currentVolume);
-
-    turnUpVolume.addEventListener('click', e => {
-        console.log("click turn UP volume");
-        turnUpVolume.classList.add = "active";
-        phoneVolume.classList.add = "show";
-        setTimeout(()=>{phoneVolume.classList.remove = "show"}, 3000); 
-        phoneVolumePercentage.style.height = currentVolume * 100 + '%';
-
-        if (currentVolume < 0.9) {
-            currentVolume = currentVolume + 0.1;
-            changeVolumeStyle();
-            setNewVolume()
-        };
-    }, false)
-
-    turnDownVolume.addEventListener("click", ()=> {
-        console.log("click turn DOWN volume");
-        turnDownVolume.classList.add = "active";
-        phoneVolume.classList.add = "show";
-        setTimeout(()=>{phoneVolume.classList.remove = "show"}, 3000); 
-
-        phoneVolumePercentage.style.height = currentVolume * 100 + '%';
-        if (currentVolume > 0.1) {
-            currentVolume = currentVolume - 0.1;
-            changeVolumeStyle();
-            setNewVolume()
-        }
-    }) 
+    if (currentVolume < 0.9) {
+        currentVolume = currentVolume + 0.1;
+        changeVolumeStyle();
+        setNewVolume()
+    };
 }
 
+let turnDownVolumeListener = function(event) {
+    console.log("click turn DOWN volume");
+    turnDownVolume.classList.add = "active";
+    phoneVolume.classList.add = "show";
+    setTimeout(()=>{phoneVolume.classList.remove = "show"}, 3000); 
+
+    phoneVolumePercentage.style.height = currentVolume * 100 + '%';
+    if (currentVolume > 0.1) {
+        currentVolume = currentVolume - 0.1;
+        changeVolumeStyle();
+        setNewVolume()
+    }
+}
+
+function listenVolumeButtons() {
+    listenDistanceToSpeaker();
+    console.log("currentVolume", currentVolume);
+    turnUpVolume.addEventListener('click', turnUpVolumeListener, false);
+    turnDownVolume.addEventListener("click", turnDownVolumeListener, false);
+}
 
 function changeVolumeStyle() {
     phoneVolumePercentage.style.height = currentVolume * 100 + '%';
     audioPlayer.querySelector(".controls .volume-percentage").style.width = currentVolume * 100 + '%';
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // 3.3 туду лист
@@ -406,7 +362,6 @@ todoApp.addEventListener('click', () => {
     todoAppContainer.classList.add("active_screen");
     initLocalStorage();
 })
-
 
 function createItem(sourceText, dateCreateItem) {
     const item = new Object;
@@ -569,8 +524,6 @@ function createListItemDone() {
         initLocalStorage();
     })
 }
-
-
 
 // ********
 // сделать поисковик аля браузер с использыванием фрейма
