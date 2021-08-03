@@ -387,6 +387,7 @@
   font-family: 'Bad Script';
   font-size: 16px;
   padding-left: 10px;
+  padding-right: 25px;
   overflow: auto;
   box-sizing: border-box;
   background: transparent;
@@ -443,7 +444,7 @@
   align-items: center;
   width: 96%;
   list-style: none;
-  height: 30px;
+  height: auto;
   border-radius: 5px;
   background-color: #fffcfc;
   color: #000;
@@ -452,19 +453,24 @@
   font-family: 'Bad Script';
   padding-bottom: 5px;
   margin: 0 0 2px;
-  padding: 0 10px;
+  padding: 4px 10px;
   box-sizing: border-box;
   cursor: pointer;
 }
 
 .todo_text_wrapper {
-  width: 100%;
-  display: inline;
+  width: 90%;
+  display: flex;
   text-align: start;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: pointer;
 }
 
-.todo_list_item label {
-  cursor: pointer;
+.todo_text {
+  width: 88%;
+  line-height: 21px;
+  word-wrap: break-word;
 }
 
 input[type=checkbox] {
@@ -547,10 +553,12 @@ input[type=checkbox] {
   left: 10px;
   background-color: #E8E9EB;
   color: rgb(187, 188, 182);
+  visibility: hidden;
 }
 
 .phone_volume.show {
-  display: flex;
+  visibility: visible;
+  transition: all cubic-bezier(0.55, 0.055, 0.675, 0.19);
 }
 
 .phone_volume-percentage {

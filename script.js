@@ -25,7 +25,7 @@ homeButton.addEventListener('click', function(evt) {
 function startScreen() {
     if (offScreen.classList.contains('active_screen')) {
         preloader.style.display = 'block';
-        setTimeout(showBlockedScreen, 3000);  //3000
+        setTimeout(showBlockedScreen, 0);  //3000
     }
 }
 
@@ -115,23 +115,6 @@ unblockPhone.addEventListener("change", function(evt) {
 
 // 3 на главной странице 
 // должны быть минимум три приложение
-// во всех приложениях должна быть возможность закрыть его
-
-const closeAppButtons = Array.from(document.querySelectorAll('.close_button'));
-const turnUpVolume = document.querySelector(".turn_up_volume");
-const turnDownVolume = document.querySelector(".turn_down_volume");
-
-closeAppButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        cameraAppContainer.classList.remove("active_screen");
-        musicAppContainer.classList.remove("active_screen");
-        todoAppContainer.classList.remove("active_screen");
-        homeScreen.classList.add("active_screen");
-        turnUpVolume.removeEventListener('click', turnUpVolumeListener, false);
-        turnDownVolume.removeEventListener("click", turnDownVolumeListener, false);
-        document.removeEventListener('mousemove', listenMouseMoveCloserToSpeaker, false);
-    });
-})
 
 
 // 3.1 камера :
@@ -139,12 +122,12 @@ closeAppButtons.forEach(button => {
 
 const cameraApp = document.querySelector('.camera_app');
 const cameraAppContainer = document.querySelector('.camera_app_container');
+const video = document.getElementById('video');
+const stream = video.srcObject;
 
 cameraApp.addEventListener('click', function() {
     homeScreen.classList.remove("active_screen");
     cameraAppContainer.classList.add("active_screen");
-    let video = document.getElementById('video');
-
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
             video.srcObject = stream;
@@ -152,10 +135,19 @@ cameraApp.addEventListener('click', function() {
         }).catch(function(err) { console.log(err.name + ": " + err.message); });
     };
 });
+console.log(video)
+function stopStreamedVideo(videoElem) {
+    const stream = video.srcObject; 
+    const tracks = stream.getTracks();
+    tracks.forEach(function(track) {
+      track.stop();
+    });
+  
+    video.srcObject = null;
+}
 
 var canvas = document.getElementById('canvas');
 var context = canvas.getContext('2d');
-var video = document.getElementById('video');
 
 context.translate(canvas.width, 0);
 context.scale(-1, 1);
@@ -173,6 +165,10 @@ document.getElementById("snap").addEventListener("click", function() {
 const musicApp = document.querySelector('.music_app');
 const musicAppContainer = document.querySelector('.music_app_container');
 let audioPlayer = document.querySelector(".audio-player");
+const playBtn = audioPlayer.querySelector(".controls .toggle-play");
+const volumeIcon = audioPlayer.querySelector(".volume-button");
+const volumeEl = audioPlayer.querySelector(".volume-container .volume");
+
 
 musicApp.addEventListener('click', function() {
     homeScreen.classList.remove("active_screen");
@@ -214,37 +210,34 @@ setInterval(() => {
 }, 500);
 
 //toggle between playing and pausing on button click
-
+let listenerPlay = function() {
+    if (audio.paused) {
+        playBtn.classList.remove("play");
+        playBtn.classList.add("pause");
+        audio.play();
+    } else {
+        playBtn.classList.remove("pause");
+        playBtn.classList.add("play");
+        audio.pause();
+    }
+} 
 function listenPlayPauseButton() {
-    const playBtn = audioPlayer.querySelector(".controls .toggle-play");
-    playBtn.addEventListener("click", () => {
-        if (audio.paused) {
-            playBtn.classList.remove("play");
-            playBtn.classList.add("pause");
-            audio.play();
-        } else {
-            playBtn.classList.remove("pause");
-            playBtn.classList.add("play");
-            audio.pause();
-        }
-    }, false);
+    playBtn.addEventListener("click", listenerPlay, false);
 }
 
-const volumeIcon = audioPlayer.querySelector(".volume-button");
-const volumeEl = audioPlayer.querySelector(".volume-container .volume");
-function listenVolumeIconToMute() {
-    volumeIcon.addEventListener("click", () => {
-        audio.muted = !audio.muted;
+let listenMuteButton = function() {
+    audio.muted = !audio.muted;
         if (audio.muted) {
             volumeEl.classList.remove("icono-volumeMedium");
             volumeEl.classList.add("icono-volumeMute");
-            console.log("currentVolume", currentVolume);
         } else {
             volumeEl.classList.add("icono-volumeMedium");
             volumeEl.classList.remove("icono-volumeMute");
-            console.log("currentVolume", currentVolume,  audio.volume);
         }
-    });
+}
+
+function listenVolumeIconToMute() {
+    volumeIcon.addEventListener("click", listenMuteButton, false);
 }
 
 //turn 128 seconds into 2:08
@@ -303,12 +296,15 @@ volumeSlider.addEventListener('click', e => {
 //behavior phone volume buttons
 let phoneVolumePercentage = document.querySelector(".phone_volume-percentage");
 let phoneVolume = document.querySelector(".phone_volume");
+const turnUpVolume = document.querySelector(".turn_up_volume");
+const turnDownVolume = document.querySelector(".turn_down_volume");
 
 let turnUpVolumeListener = function(event) {
     console.log("click turn UP volume");
-    turnUpVolume.classList.add = "active";
-    phoneVolume.classList.add = "show";
-    setTimeout(()=>{phoneVolume.classList.remove = "show"}, 3000); 
+    turnUpVolume.classList.add("active");
+    setTimeout(()=>{turnUpVolume.classList.remove("active")}, 500);
+    phoneVolume.classList.add("show") ;
+    setTimeout(()=>{phoneVolume.classList.remove("show")}, 1500); 
     phoneVolumePercentage.style.height = currentVolume * 100 + '%';
 
     if (currentVolume < 0.9) {
@@ -320,9 +316,10 @@ let turnUpVolumeListener = function(event) {
 
 let turnDownVolumeListener = function(event) {
     console.log("click turn DOWN volume");
-    turnDownVolume.classList.add = "active";
-    phoneVolume.classList.add = "show";
-    setTimeout(()=>{phoneVolume.classList.remove = "show"}, 3000); 
+    turnDownVolume.classList.add("active");
+    setTimeout(()=>{turnDownVolume.classList.remove("active")}, 500);
+    phoneVolume.classList.add("show");
+    setTimeout(()=>{phoneVolume.classList.remove("show")}, 1500); 
 
     phoneVolumePercentage.style.height = currentVolume * 100 + '%';
     if (currentVolume > 0.1) {
@@ -334,7 +331,6 @@ let turnDownVolumeListener = function(event) {
 
 function listenVolumeButtons() {
     listenDistanceToSpeaker();
-    console.log("currentVolume", currentVolume);
     turnUpVolume.addEventListener('click', turnUpVolumeListener, false);
     turnDownVolume.addEventListener("click", turnDownVolumeListener, false);
 }
@@ -524,6 +520,29 @@ function createListItemDone() {
         initLocalStorage();
     })
 }
+
+
+// во всех приложениях должна быть возможность закрыть его
+
+const closeAppButtons = Array.from(document.querySelectorAll('.close_button'));
+
+closeAppButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        cameraAppContainer.classList.remove("active_screen");
+        musicAppContainer.classList.remove("active_screen");
+        todoAppContainer.classList.remove("active_screen");
+        homeScreen.classList.add("active_screen");
+        //remove listeners for player and volume buttons
+        document.removeEventListener('mousemove', listenMouseMoveCloserToSpeaker, false);
+        playBtn.removeEventListener("click", listenerPlay, false);
+        turnUpVolume.removeEventListener('click', turnUpVolumeListener, false);
+        turnDownVolume.removeEventListener("click", turnDownVolumeListener, false);
+        volumeIcon.removeEventListener("click", listenMuteButton, false);
+        if (video.srcObject) {
+            stopStreamedVideo();
+        }
+    });
+})
 
 // ********
 // сделать поисковик аля браузер с использыванием фрейма
