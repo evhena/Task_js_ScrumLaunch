@@ -13,7 +13,7 @@ const preloader = document.querySelector('.preloader');
 preloader.style.display = 'none';
 offScreen.classList.add('active_screen');
 
-homeButton.addEventListener('click', function(evt) {
+homeButton.addEventListener('click', (evt) => {
     if (evt.detail === 3) {
         console.log('triple click!');
         phoneOFF();
@@ -22,14 +22,14 @@ homeButton.addEventListener('click', function(evt) {
     }
 });
 
-function startScreen() {
+startScreen = () => {
     if (offScreen.classList.contains('active_screen')) {
         preloader.style.display = 'block';
         setTimeout(showBlockedScreen, 3000);  //3000
     }
 }
 
-function showBlockedScreen() {
+showBlockedScreen = () => {
     preloader.style.display = 'none';
     offScreen.classList.remove('active_screen');
     blockedScreen.classList.add('active_screen');
@@ -37,15 +37,15 @@ function showBlockedScreen() {
 
 
 // 1.1 при длительном нажатии на кнопку хоум (в течении 3 секунд) или при тройном нажатии телефон должен выключится с той же анимацией
-let timer = 0,
-    timerInterval;
+let timer = 0;
+let timerInterval;
 
-function phoneOFF() {
+phoneOFF = () => {
     preloader.style.display = 'block';
     setTimeout(showOFFScreen, 3000);
 }
 
-function showOFFScreen() {
+showOFFScreen = () => {
     preloader.style.display = 'none';
     blockedScreen.classList.remove("active_screen");
     homeScreen.classList.remove("active_screen");
@@ -70,9 +70,6 @@ homeButton.addEventListener("mouseup", function() {
 
 
 // 2 экран заблокированного телефона с текущем временем(ч:м:с), датой и контроллером для разблокировки телефона
-const time = document.querySelector('.time');
-const date = document.querySelector('.date');
-let currentDate = new Date();
 
 // function getCurrentTimeString(dots) {
 //     var timeString = currentDate.toTimeString().replace(/:[0-9]{2,2} .*/, '');
@@ -86,10 +83,14 @@ let currentDate = new Date();
 //     1000
 // );
 
-function getCurrentTime() {
+const date = document.querySelector('.date');
+let currentDate = new Date();
+let time = document.querySelector('.time');
+
+getCurrentTime = () => {
     return new Date().toTimeString().replace(/ .*/, '');
 }
-
+    
 setInterval(
     () => time.innerHTML = getCurrentTime(),
     1000
@@ -105,12 +106,12 @@ date.innerHTML = currentDay;
 
 let unblockPhone = document.getElementById('unblockPhone');
 
-unblockPhone.addEventListener("change", function(evt) {
-    if (this.value == 100) {
+unblockPhone.addEventListener("change", (evt) => {
+    if (unblockPhone.value == 100) {
       blockedScreen.classList.remove("active_screen");
       homeScreen.classList.add("active_screen");
     }
-    this.value = 0;
+    unblockPhone.value = 0;
 }); 
 
 // 3 на главной странице 
@@ -125,21 +126,21 @@ const cameraAppContainer = document.querySelector('.camera_app_container');
 const video = document.getElementById('video');
 const stream = video.srcObject;
 
-cameraApp.addEventListener('click', function() {
+cameraApp.addEventListener('click', () => {
     homeScreen.classList.remove("active_screen");
     cameraAppContainer.classList.add("active_screen");
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+        navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
             video.srcObject = stream;
             video.play();
-        }).catch(function(err) { console.log(err.name + ": " + err.message); });
+        }).catch((err) => { console.log(err.name + ": " + err.message); });
     };
 });
-console.log(video)
-function stopStreamedVideo(videoElem) {
+
+stopStreamedVideo = (videoElem) => {
     const stream = video.srcObject; 
     const tracks = stream.getTracks();
-    tracks.forEach(function(track) {
+    tracks.forEach((track) => {
       track.stop();
     });
   
@@ -152,7 +153,7 @@ var context = canvas.getContext('2d');
 context.translate(canvas.width, 0);
 context.scale(-1, 1);
 
-document.getElementById("snap").addEventListener("click", function() {
+document.getElementById("snap").addEventListener("click", () => {
 	context.drawImage(video, 0, 0, 640, 480);
 });
 
@@ -164,20 +165,19 @@ document.getElementById("snap").addEventListener("click", function() {
 
 const musicApp = document.querySelector('.music_app');
 const musicAppContainer = document.querySelector('.music_app_container');
-let audioPlayer = document.querySelector(".audio-player");
+const audioPlayer = document.querySelector(".audio-player");
 const playBtn = audioPlayer.querySelector(".controls .toggle-play");
 const volumeIcon = audioPlayer.querySelector(".volume-button");
 const volumeEl = audioPlayer.querySelector(".volume-container .volume");
 
 
-musicApp.addEventListener('click', function() {
+musicApp.addEventListener('click', () => {
     homeScreen.classList.remove("active_screen");
     musicAppContainer.classList.add("active_screen");
     listenVolumeButtons();
     listenPlayPauseButton();
     listenVolumeIconToMute();
 });
-
 
 let audio = new Audio(
     "https://ia800905.us.archive.org/19/items/FREE_background_music_dhalius/backsound.mp3"
@@ -194,6 +194,7 @@ audio.addEventListener("loadeddata", ()=>{
 
 //click on timeline to skip around
 const timeline = audioPlayer.querySelector(".timeline");
+
 timeline.addEventListener("click", e => {
     const timelineWidth = window.getComputedStyle(timeline).width;
     const timeToSeek = e.offsetX / parseInt(timelineWidth) * audio.duration;
@@ -210,7 +211,7 @@ setInterval(() => {
 }, 500);
 
 //toggle between playing and pausing on button click
-let listenerPlay = function() {
+let listenerPlay = () => {
     if (audio.paused) {
         playBtn.classList.remove("play");
         playBtn.classList.add("pause");
@@ -220,12 +221,13 @@ let listenerPlay = function() {
         playBtn.classList.add("play");
         audio.pause();
     }
-} 
-function listenPlayPauseButton() {
+}
+
+listenPlayPauseButton = () => {
     playBtn.addEventListener("click", listenerPlay, false);
 }
 
-let listenMuteButton = function() {
+let listenMuteButton = () => {
     audio.muted = !audio.muted;
         if (audio.muted) {
             volumeEl.classList.remove("icono-volumeMedium");
@@ -236,12 +238,11 @@ let listenMuteButton = function() {
         }
 }
 
-function listenVolumeIconToMute() {
+listenVolumeIconToMute = () =>
     volumeIcon.addEventListener("click", listenMuteButton, false);
-}
 
 //turn 128 seconds into 2:08
-function getTimeCodeFromNum(num) {
+getTimeCodeFromNum = (num) => {
     let seconds = parseInt(num);
     let minutes = parseInt(seconds / 60);
     seconds -= minutes * 60;
@@ -255,7 +256,7 @@ function getTimeCodeFromNum(num) {
 //calculate distance from mouse to speaker
 let mouseX, mouseY;
 
-function calculateDistance(mouseX, mouseY) {
+calculateDistance = (mouseX, mouseY) => {
     let speaker = document.querySelector(".front_speaker");
     let coodrsSpeaker = speaker.getBoundingClientRect();
     return Math.floor(Math.sqrt(Math.pow(mouseX - (coodrsSpeaker.left+(coodrsSpeaker.width/2)), 2) + 
@@ -265,7 +266,7 @@ function calculateDistance(mouseX, mouseY) {
 //when we take closer to speaker music become louder
 let speakerClosestyCoefficient;
 
-let listenMouseMoveCloserToSpeaker = function(e) {
+let listenMouseMoveCloserToSpeaker = (e) => {
     let maxDistance = 800;
     mouseX = e.pageX;
     mouseY = e.pageY;
@@ -273,19 +274,17 @@ let listenMouseMoveCloserToSpeaker = function(e) {
     speakerClosestyCoefficient = (100 - (distance * 100 / maxDistance)) / 100;
     //console.log(speakerClosestyCoefficient)
     setNewVolume()
-    }
+}
 
-function listenDistanceToSpeaker(newVolume) {
+listenDistanceToSpeaker = (newVolume) => 
     document.addEventListener('mousemove', listenMouseMoveCloserToSpeaker, false);
-}
 
-function setNewVolume(){
-    audio.volume = currentVolume * speakerClosestyCoefficient;
-}
+setNewVolume = () => audio.volume = currentVolume * speakerClosestyCoefficient;
 
 //click volume slider to change volume
 const volumeSlider = audioPlayer.querySelector(".controls .volume-slider");
-volumeSlider.addEventListener('click', e => {
+
+volumeSlider.addEventListener('click', (e) => {
     const sliderWidth = window.getComputedStyle(volumeSlider).width;
     let newVolume = e.offsetX / parseInt(sliderWidth);
     currentVolume = newVolume;
@@ -299,7 +298,7 @@ let phoneVolume = document.querySelector(".phone_volume");
 const turnUpVolume = document.querySelector(".turn_up_volume");
 const turnDownVolume = document.querySelector(".turn_down_volume");
 
-let turnUpVolumeListener = function(event) {
+let turnUpVolumeListener = (event) => {
     console.log("click turn UP volume");
     turnUpVolume.classList.add("active");
     setTimeout(()=>{turnUpVolume.classList.remove("active")}, 500);
@@ -314,12 +313,12 @@ let turnUpVolumeListener = function(event) {
     };
 }
 
-let turnDownVolumeListener = function(event) {
+let turnDownVolumeListener = (event) => {
     console.log("click turn DOWN volume");
     turnDownVolume.classList.add("active");
-    setTimeout(()=>{turnDownVolume.classList.remove("active")}, 500);
+    setTimeout(() => {turnDownVolume.classList.remove("active")}, 500);
     phoneVolume.classList.add("show");
-    setTimeout(()=>{phoneVolume.classList.remove("show")}, 1500); 
+    setTimeout(() => {phoneVolume.classList.remove("show")}, 1500); 
 
     phoneVolumePercentage.style.height = currentVolume * 100 + '%';
     if (currentVolume > 0.1) {
@@ -329,13 +328,13 @@ let turnDownVolumeListener = function(event) {
     }
 }
 
-function listenVolumeButtons() {
+listenVolumeButtons = () => {
     listenDistanceToSpeaker();
     turnUpVolume.addEventListener('click', turnUpVolumeListener, false);
     turnDownVolume.addEventListener("click", turnDownVolumeListener, false);
 }
 
-function changeVolumeStyle() {
+changeVolumeStyle = () => {
     phoneVolumePercentage.style.height = currentVolume * 100 + '%';
     audioPlayer.querySelector(".controls .volume-percentage").style.width = currentVolume * 100 + '%';
 }
@@ -359,7 +358,7 @@ todoApp.addEventListener('click', () => {
     initLocalStorage();
 })
 
-function createItem(sourceText, dateCreateItem) {
+createItem = (sourceText, dateCreateItem) => {
     const item = new Object;
     item.text = sourceText;
     item.status = 'active';
@@ -367,8 +366,7 @@ function createItem(sourceText, dateCreateItem) {
     return item;
 }
 
-
-function showItem(todoList, item, key) {
+showItem = (todoList, item, key) => {
     if (!item.text) {
         console.log(`empty input`);
         return;
@@ -404,7 +402,7 @@ function showItem(todoList, item, key) {
 }
 
 //Del button
-function subscribeDeleteItem(el, key) {
+subscribeDeleteItem = (el, key) => {
     el.addEventListener('click', (event) => {
         list[key].status = 'deleted';
         el.parentElement.remove();
@@ -414,7 +412,7 @@ function subscribeDeleteItem(el, key) {
 }
 
 //Checkbox
-function subscribeCheckItem(el, key) {
+subscribeCheckItem = (el, key) => {
     el.addEventListener('change', function checkAndUncheck() {
         if (this.checked) {
             this.parentElement.classList.add("checked");
@@ -442,7 +440,7 @@ todoAdd.addEventListener('click', () => {
     inputTodo.value = "";
 });
 
-inputTodo.addEventListener('keyup', function(e) {
+inputTodo.addEventListener('keyup', (e) => {
     if (e.which === 13) {
         textFromUser = inputTodo.value;
         createTodoFromUser(textFromUser);
@@ -457,7 +455,7 @@ inputTodo.addEventListener('dblclick', () => {
 });
 
 
-function createTodoFromUser(sourceText) {
+createTodoFromUser = (sourceText) => {
     const dateCreateItem = new Date;
     const key = sourceText + '_' + dateCreateItem.getTime();
     const item = createItem(textFromUser, dateCreateItem);
@@ -467,8 +465,7 @@ function createTodoFromUser(sourceText) {
     saveToLocalStorage(); 
 }
 
-
-function createTodoFromStorage() {
+createTodoFromStorage = () => {
     todoList = document.querySelector("ul.todo_list");
     todoList.innerHTML = "";
     for (key in list) {
@@ -479,8 +476,7 @@ function createTodoFromStorage() {
     };
 }
 
-
-function initLocalStorage() {
+initLocalStorage = () => {
     if (localStorage.getItem('taskPhone_todoList') !== null) {
         list = JSON.parse(localStorage.getItem("taskPhone_todoList"));
         createTodoFromStorage(list);
@@ -489,20 +485,18 @@ function initLocalStorage() {
     }
 }
 
-
-function saveToLocalStorage() {
-    localStorage.setItem('taskPhone_todoList', JSON.stringify(list));
-}
+saveToLocalStorage = () => localStorage.setItem('taskPhone_todoList', JSON.stringify(list));
 
 
 const showListDone = document.querySelector(".button_list_done");
+
 showListDone.addEventListener("click", ()=> {
     todoAppContainer.classList.remove("active_screen");
     todoDoneContainer.classList.add("active_screen");
     createListItemDone(list);
 });
 
-function createListItemDone() {
+createListItemDone = () => {
     todoList = document.querySelector("ul.todo_done_list");
     todoList.innerHTML = "";
     for (key in list) {
@@ -513,7 +507,7 @@ function createListItemDone() {
     }
    
     const backButton = document.querySelector(".back_button");
-    backButton.addEventListener('click', ()=> {
+    backButton.addEventListener('click', () => {
         todoDoneContainer.classList.remove("active_screen");
         todoAppContainer.classList.add("active_screen");
         initLocalStorage();
@@ -525,8 +519,8 @@ function createListItemDone() {
 
 const closeAppButtons = Array.from(document.querySelectorAll('.close_button'));
 
-closeAppButtons.forEach(button => {
-    button.addEventListener('click', () => {
+closeAppButtons.forEach(buttonClose => {
+    buttonClose.addEventListener('click', () => {
         cameraAppContainer.classList.remove("active_screen");
         musicAppContainer.classList.remove("active_screen");
         todoAppContainer.classList.remove("active_screen");
@@ -537,6 +531,7 @@ closeAppButtons.forEach(button => {
         turnUpVolume.removeEventListener('click', turnUpVolumeListener, false);
         turnDownVolume.removeEventListener("click", turnDownVolumeListener, false);
         volumeIcon.removeEventListener("click", listenMuteButton, false);
+        //remove streaming viseo
         if (video.srcObject) {
             stopStreamedVideo();
         }
