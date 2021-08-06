@@ -21,15 +21,6 @@ let startScreen = () => {
   }
 }
 
-homeButton.addEventListener('click', (evt) => {
-  if (evt.detail === 3) {
-    console.log('triple click!');
-    phoneOFF();
-  } else if (evt.detail === 1) {
-    startScreen();
-  }
-});
-
 let showBlockedScreen = () => {
   preloader.style.display = 'none';
   offScreen.classList.remove('active_screen');
@@ -53,6 +44,15 @@ let showOFFScreen = () => {
   homeScreen.classList.remove('active_screen');
   offScreen.classList.add('active_screen');
 }
+
+homeButton.addEventListener('click', (evt) => {
+  if (evt.detail === 3) {
+    console.log('triple click!');
+    phoneOFF();
+  } else if (evt.detail === 1) {
+    startScreen();
+  }
+});
 
 homeButton.addEventListener('mousedown', () => {
   timerInterval = setInterval(() => {
@@ -183,7 +183,7 @@ musicApp.addEventListener('click', () => {
 const audio = new Audio(
   'https://ia800905.us.archive.org/19/items/FREE_background_music_dhalius/backsound.mp3'
 );
-console.dir(audio);
+// console.dir(audio);
 
 let currentVolume = audio.volume;
 const timeLength = audioPlayer.querySelector('.time .length');
@@ -269,7 +269,7 @@ const calculateDistance = (mouseX, mouseY) => {
 let speakerClosestyCoefficient;
 
 const listenMouseMoveCloserToSpeaker = (e) => {
-  const maxDistance = 800;
+  const maxDistance = 1000;
   mouseX = e.pageX;
   mouseY = e.pageY;
   const distance = calculateDistance(mouseX, mouseY);
